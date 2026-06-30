@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Brick That Chooses You. Crafted by time. Forged by fire. Reserved for visionaries.">
+  <meta name="theme-color" content="#050505">
+  <title>BRICK — The Ordinary That Became Extraordinary</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+
+  <!-- Lenis -->
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============================================ -->
+  <!-- LOADING SCREEN -->
+  <!-- ============================================ -->
+  <div id="loader" class="loader" role="status" aria-label="Loading">
+    <div class="loader-content">
+      <div class="loader-brick">
+        <div class="loader-brick-face"></div>
+        <div class="loader-brick-face"></div>
+        <div class="loader-brick-face"></div>
+      </div>
+      <p class="loader-text">Crafting your experience</p>
+      <div class="loader-bar">
+        <div class="loader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- INTERACTIVE CURSOR -->
+  <!-- ============================================ -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SCROLL PROGRESS -->
+  <!-- ============================================ -->
+  <div class="scroll-progress" role="progressbar" aria-label="Page scroll progress">
+    <div class="scroll-progress-fill" id="scrollProgressFill"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- NAVIGATION -->
+  <!-- ============================================ -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar-inner">
+      <a href="#hero" class="navbar-logo" aria-label="BRICK Home">
+        <span class="logo-text">BRICK</span>
+        <span class="logo-dot"></span>
+      </a>
+
+      <div class="navbar-links" id="navLinks">
+        <a href="#story" class="nav-link">Story</a>
+        <a href="#showcase" class="nav-link">Explore</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#game" class="nav-link">Prove</a>
+        <a href="#product" class="nav-link">Purchase</a>
+      </div>
+
+      <div class="navbar-actions">
+        <button class="nav-icon-btn audio-toggle" id="audioToggle" aria-label="Toggle ambient audio">
+          <i class="fa-solid fa-music"></i>
+        </button>
+        <button class="nav-icon-btn cart-toggle" id="cartToggle" aria-label="Open shopping cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="nav-icon-btn menu-toggle" id="menuToggle" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- MOBILE MENU -->
+  <!-- ============================================ -->
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
+    <div class="mobile-menu-inner">
+      <a href="#story" class="mobile-link" data-nav>Story</a>
+      <a href="#showcase" class="mobile-link" data-nav>Explore</a>
+      <a href="#features" class="mobile-link" data-nav>Features</a>
+      <a href="#game" class="mobile-link" data-nav>Prove</a>
+      <a href="#product" class="mobile-link" data-nav>Purchase</a>
+      <div class="mobile-menu-divider"></div>
+      <button class="mobile-link audio-toggle" data-nav>
+        <i class="fa-solid fa-music"></i> Ambient
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION 1: HERO -->
+  <!-- ============================================ -->
+  <section id="hero" class="section hero" data-section>
+    <div class="hero-canvas" id="heroCanvas"></div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-particles" id="heroParticles"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Limited Edition
+        <span class="badge-count">100</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-line">The Brick That</span>
+        <span class="title-line accent">Chooses You.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Crafted by time. Forged by fire. Reserved for visionaries.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#showcase" class="btn btn-primary" data-smooth>
+          <span class="btn-text">Explore</span>
+          <i class="fa-solid fa-arrow-right"></i>
+          <span class="btn-ripple"></span>
+        </a>
+        <a href="#product" class="btn btn-outline" data-smooth>
+          <span class="btn-text">Apply for Ownership</span>
+          <i class="fa-solid fa-gem"></i>
+          <span class="btn-ripple"></span>
+        </a>
+      </div>
+
+      <div class="hero-scroll-indicator" aria-hidden="true">
+        <span class="scroll-text">Scroll to discover</span>
+        <div class="scroll-line">
+          <div class="scroll-line-mover"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-lighting" id="heroLighting"></div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 2: STORYTELLING -->
+  <!-- ============================================ -->
+  <section id="story" class="section story" data-section>
+    <div class="story-bg-overlay"></div>
+
+    <div class="section-label">
+      <span class="label-line"></span>
+      <span class="label-text">The Making of a Legend</span>
+    </div>
+
+    <h2 class="section-title">
+      <span class="title-reveal">Born from</span>
+      <span class="title-reveal accent">Ancient Clay</span>
+    </h2>
+
+    <div class="story-carousel">
+      <div class="story-item" data-index="0">
+        <div class="story-visual">
+          <div class="story-visual-inner clay-visual">
+            <div class="particle-cluster" id="clayParticles"></div>
+          </div>
+        </div>
+        <div class="story-text">
+          <span class="story-era">c. 7,000 BC</span>
+          <h3 class="story-heading">Born from Ancient Clay</h3>
+          <p class="story-desc">
+            Before civilizations rose, the earth held a secret. Molded by rivers and tempered by sun, the first clay was pulled from the earth by hands that understood patience.
+          </p>
+          <div class="story-stat">
+            <span class="stat-number" data-count="7000">0</span>
+            <span class="stat-label">Years of Heritage</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-item" data-index="1">
+        <div class="story-visual">
+          <div class="story-visual-inner fire-visual">
+            <div class="fire-container" id="fireContainer"></div>
+          </div>
+        </div>
+        <div class="story-text">
+          <span class="story-era">c. 3,500 BC</span>
+          <h3 class="story-heading">Forged by Fire</h3>
+          <p class="story-desc">
+            Kilns roared to life, transforming mud into monument. At 1,000°C, clay undergoes an irreversible metamorphosis. It becomes unbreakable. It becomes eternal.
+          </p>
+          <div class="story-stat">
+            <span class="stat-number" data-count="1000">0</span>
+            <span class="stat-label">Degrees Celsius</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-item" data-index="2">
+        <div class="story-visual">
+          <div class="story-visual-inner craft-visual">
+            <div class="craft-grid"></div>
+          </div>
+        </div>
+        <div class="story-text">
+          <span class="story-era">Present Day</span>
+          <h3 class="story-heading">Perfected by Craftsmanship</h3>
+          <p class="story-desc">
+            Each brick is hand-selected. Inspected. Measured. Only one in every ten thousand meets our standard. The rest are returned to the earth.
+          </p>
+          <div class="story-stat">
+            <span class="stat-number" data-count="99.99">0</span>
+            <span class="stat-label">Purity Standard</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-item" data-index="3">
+        <div class="story-visual">
+          <div class="story-visual-inner legacy-visual">
+            <div class="legacy-ring"></div>
+          </div>
+        </div>
+        <div class="story-text">
+          <span class="story-era">Forever</span>
+          <h3 class="story-heading">Built to Outlast Generations</h3>
+          <p class="story-desc">
+            While skyscrapers crumble and trends fade, the brick remains. It does not rust. It does not decay. It simply waits for the next civilization to find it.
+          </p>
+          <div class="story-stat">
+            <span class="stat-number" data-count="10000">0</span>
+            <span class="stat-label">Year Lifespan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-item" data-index="4">
+        <div class="story-visual">
+          <div class="story-visual-inner exclusive-visual">
+            <div class="exclusive-badge-large">
+              <span class="exclusive-number">100</span>
+              <span class="exclusive-label">Owners</span>
+            </div>
+          </div>
+        </div>
+        <div class="story-text">
+          <span class="story-era">Now</span>
+          <h3 class="story-heading">Limited to 100 Owners</h3>
+          <p class="story-desc">
+            Not everyone will understand. Not everyone should. One hundred bricks. One hundred souls who refuse to own ordinary things.
+          </p>
+          <div class="story-stat">
+            <span class="stat-number" data-count="93" id="remainingCount">0</span>
+            <span class="stat-label">Already Claimed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-nav">
+      <button class="story-arrow story-prev" aria-label="Previous story">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <div class="story-dots" id="storyDots"></div>
+      <button class="story-arrow story-next" aria-label="Next story">
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 3: 360 PRODUCT SHOWCASE -->
+  <!-- ============================================ -->
+  <section id="showcase" class="section showcase" data-section>
+    <div class="section-label light">
+      <span class="label-line"></span>
+      <span class="label-text">Interactive Experience</span>
+    </div>
+
+    <h2 class="section-title light">
+      <span class="title-reveal">Inspect Every</span>
+      <span class="title-reveal accent">Detail.</span>
+    </h2>
+
+    <div class="showcase-layout">
+      <div class="showcase-viewer" id="showcaseViewer">
+        <div class="showcase-canvas" id="showcaseCanvas"></div>
+
+        <div class="showcase-controls">
+          <button class="showcase-btn" id="rotateToggle" aria-label="Toggle auto rotation">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+          <button class="showcase-btn" id="resetView" aria-label="Reset view">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+
+        <div class="showcase-zoom">
+          <button class="zoom-btn" id="zoomIn" aria-label="Zoom in">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <div class="zoom-level">
+            <span id="zoomLevel">1.0</span>x
+          </div>
+          <button class="zoom-btn" id="zoomOut" aria-label="Zoom out">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+        </div>
+
+        <div class="showcase-hotspots">
+          <div class="hotspot" style="top: 20%; left: 30%;" data-label="Premium Clay Finish">
+            <span class="hotspot-dot"></span>
+            <span class="hotspot-tooltip">Premium Clay Finish</span>
+          </div>
+          <div class="hotspot" style="top: 60%; left: 70%;" data-label="Hand-Crafted Edge">
+            <span class="hotspot-dot"></span>
+            <span class="hotspot-tooltip">Hand-Crafted Edge</span>
+          </div>
+          <div class="hotspot" style="top: 40%; left: 50%;" data-label="Aged Patina">
+            <span class="hotspot-dot"></span>
+            <span class="hotspot-tooltip">Aged Patina</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="showcase-info">
+        <div class="showcase-specs">
+          <div class="spec-item">
+            <span class="spec-label">Dimensions</span>
+            <span class="spec-value">215 × 102.5 × 65 mm</span>
+          </div>
+          <div class="spec-divider"></div>
+          <div class="spec-item">
+            <span class="spec-label">Weight</span>
+            <span class="spec-value">2.3 kg</span>
+          </div>
+          <div class="spec-divider"></div>
+          <div class="spec-item">
+            <span class="spec-label">Material</span>
+            <span class="spec-value">Fired Clay</span>
+          </div>
+          <div class="spec-divider"></div>
+          <div class="spec-item">
+            <span class="spec-label">Finish</span>
+            <span class="spec-value">Matte Textured</span>
+          </div>
+          <div class="spec-divider"></div>
+          <div class="spec-item">
+            <span class="spec-label">Origin</span>
+            <span class="spec-value">Earth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 4: LUXURY FEATURES -->
+  <!-- ============================================ -->
+  <section id="features" class="section features" data-section>
+    <div class="section-label">
+      <span class="label-line"></span>
+      <span class="label-text">Uncompromising</span>
+    </div>
+
+    <h2 class="section-title">
+      <span class="title-reveal">Designed to</span>
+      <span class="title-reveal accent">Outlast Everything.</span>
+    </h2>
+
+    <div class="features-grid">
+      <div class="feature-card" data-delay="0">
+        <div class="feature-icon">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h3 class="feature-name">Battery Life</h3>
+        <p class="feature-tagline">Infinite</p>
+        <p class="feature-desc">No charging. No wires. No batteries. It simply exists. Powered by time itself.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.1">
+        <div class="feature-icon">
+          <i class="fa-solid fa-droplet"></i>
+        </div>
+        <h3 class="feature-name">Water Resistance</h3>
+        <p class="feature-tagline">Mostly</p>
+        <p class="feature-desc">Survives rain, rivers, and centuries of humidity. Not recommended for oceans.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.2">
+        <div class="feature-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 class="feature-name">Durability</h3>
+        <p class="feature-tagline">100+ Years</p>
+        <p class="feature-desc">Engineered to outlast you, your children, and their children's children.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.3">
+        <div class="feature-icon">
+          <i class="fa-solid fa-globe"></i>
+        </div>
+        <h3 class="feature-name">Compatibility</h3>
+        <p class="feature-tagline">Earth</p>
+        <p class="feature-desc">Works perfectly on every continent. No setup required. Just placement.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.4">
+        <div class="feature-icon">
+          <i class="fa-solid fa-plug"></i>
+        </div>
+        <h3 class="feature-name">Charging</h3>
+        <p class="feature-tagline">Never Required</p>
+        <p class="feature-desc">Zero power consumption. No energy bills. No cables. Pure autonomy.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.5">
+        <div class="feature-icon">
+          <i class="fa-solid fa-temperature-high"></i>
+        </div>
+        <h3 class="feature-name">Heat Resistance</h3>
+        <p class="feature-tagline">1,000°C</p>
+        <p class="feature-desc">Forged in kilns hot enough to melt steel. Your fireplace is nothing.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.6">
+        <div class="feature-icon">
+          <i class="fa-solid fa-weight-scale"></i>
+        </div>
+        <h3 class="feature-name">Portability</h3>
+        <p class="feature-tagline">Manageable</p>
+        <p class="feature-desc">Heavy enough to feel substantial. Light enough to carry—once.</p>
+      </div>
+
+      <div class="feature-card" data-delay="0.7">
+        <div class="feature-icon">
+          <i class="fa-solid fa-shield"></i>
+        </div>
+        <h3 class="feature-name">Warranty</h3>
+        <p class="feature-tagline">Lifetime+</p>
+        <p class="feature-desc">Covered for life. Not yours—the brick's. Terms apply. (No terms apply.)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 5: MINI GAME -->
+  <!-- ============================================ -->
+  <section id="game" class="section game" data-section>
+    <div class="section-label light">
+      <span class="label-line"></span>
+      <span class="label-text">Prove Your Worth</span>
+    </div>
+
+    <h2 class="section-title light">
+      <span class="title-reveal">Stack. Build.</span>
+      <span class="title-reveal accent">Prevail.</span>
+    </h2>
+
+    <p class="game-intro">
+      The brick is patient. Are you? Stack as many bricks as you can in 30 seconds. Precision matters.
+    </p>
+
+    <div class="game-container">
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="hud-label">Time</span>
+          <span class="hud-value" id="gameTimer">30</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Score</span>
+          <span class="hud-value" id="gameScore">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Combo</span>
+          <span class="hud-value" id="gameCombo">x1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">High</span>
+          <span class="hud-value" id="gameHigh">0</span>
+        </div>
+      </div>
+
+      <div class="game-board" id="gameBoard">
+        <div class="game-cursor-ghost" id="gameGhost"></div>
+      </div>
+
+      <div class="game-controls">
+        <button class="btn btn-primary" id="gameStartBtn">
+          <i class="fa-solid fa-play"></i>
+          <span>Start Stacking</span>
+        </button>
+        <div class="game-controls-hint">
+          <span><i class="fa-regular fa-hand-pointer"></i> Drag to position</span>
+          <span><i class="fa-regular fa-clock"></i> Click to drop</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Result Modal -->
+    <div class="game-result" id="gameResult">
+      <div class="result-backdrop"></div>
+      <div class="result-modal">
+        <div class="result-tier" id="resultTier">
+          <div class="tier-icon">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <span class="tier-name" id="tierName">Bronze</span>
+        </div>
+        <div class="result-score">
+          <span class="result-score-value" id="resultScore">0</span>
+          <span class="result-score-label">Bricks Stacked</span>
+        </div>
+        <div class="result-reward">
+          <span class="reward-label">Your Reward</span>
+          <span class="reward-value" id="rewardValue">5% Discount</span>
+        </div>
+        <div class="result-divider"></div>
+        <p class="result-message" id="resultMessage">Not bad. The brick acknowledges your effort.</p>
+        <div class="result-actions">
+          <button class="btn btn-outline" id="gameRetryBtn">
+            <i class="fa-solid fa-rotate"></i> Try Again
+          </button>
+          <a href="#product" class="btn btn-primary" data-smooth>
+            <span>Claim Your Brick</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 6: TESTIMONIALS -->
+  <!-- ============================================ -->
+  <section id="testimonials" class="section testimonials" data-section>
+    <div class="section-label">
+      <span class="label-line"></span>
+      <span class="label-text">The Verdict</span>
+    </div>
+
+    <h2 class="section-title">
+      <span class="title-reveal">Those Who</span>
+      <span class="title-reveal accent">Know.</span>
+    </h2>
+
+    <div class="testimonials-track-wrapper">
+      <div class="testimonials-track" id="testimonialsTrack">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Finally. A product that refuses to become obsolete. It's not just a brick—it's a statement."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">JM</div>
+            <div class="author-info">
+              <span class="author-name">James Morrison</span>
+              <span class="author-title">Architect, Foster & Partners</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"My grandchildren will inherit this. That's not investment—that's legacy."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">EK</div>
+            <div class="author-info">
+              <span class="author-name">Elena Kovács</span>
+              <span class="author-title">Art Collector</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"The greatest architectural investment I've ever made. And I own a Frank Lloyd Wright."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">HW</div>
+            <div class="author-info">
+              <span class="author-name">Haruki Watanabe</span>
+              <span class="author-title">Developer, Tokyo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"I put it on my desk. Everyone asks what it is. That's the point."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SR</div>
+            <div class="author-info">
+              <span class="author-name">Sophie Reinhardt</span>
+              <span class="author-title">Creative Director, Berlin</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"The world has enough ordinary things. This is not one of them."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MA</div>
+            <div class="author-info">
+              <span class="author-name">Marcus Aurelius II</span>
+              <span class="author-title">Philosopher, Modern Era</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duplicate for seamless loop -->
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Finally. A product that refuses to become obsolete. It's not just a brick—it's a statement."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">JM</div>
+            <div class="author-info">
+              <span class="author-name">James Morrison</span>
+              <span class="author-title">Architect, Foster & Partners</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 7: PRODUCT PURCHASE -->
+  <!-- ============================================ -->
+  <section id="product" class="section product" data-section>
+    <div class="section-label light">
+      <span class="label-line"></span>
+      <span class="label-text">Acquire</span>
+    </div>
+
+    <h2 class="section-title light">
+      <span class="title-reveal">Own the</span>
+      <span class="title-reveal accent">Extraordinary.</span>
+    </h2>
+
+    <div class="product-layout">
+      <div class="product-gallery">
+        <div class="product-main-image" id="productMainImage">
+          <div class="product-3d-badge">
+            <i class="fa-solid fa-cube"></i> 360°
+          </div>
+          <div class="product-gallery-thumbs">
+            <button class="gallery-thumb active" data-view="front" aria-label="Front view">
+              <div class="thumb-brick thumb-front"></div>
+            </button>
+            <button class="gallery-thumb" data-view="side" aria-label="Side view">
+              <div class="thumb-brick thumb-side"></div>
+            </button>
+            <button class="gallery-thumb" data-view="top" aria-label="Top view">
+              <div class="thumb-brick thumb-top"></div>
+            </button>
+            <button class="gallery-thumb" data-view="angle" aria-label="Angle view">
+              <div class="thumb-brick thumb-angle"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-details">
+        <div class="product-badge">Limited Edition</div>
+        <h3 class="product-name">The Original Brick</h3>
+        <p class="product-tagline">One brick. Infinite meaning.</p>
+
+        <div class="product-pricing">
+          <span class="product-price" id="productPrice">$1,999</span>
+          <span class="product-original-price" id="productOriginalPrice">$2,499</span>
+          <span class="product-discount-badge" id="productDiscountBadge">-20%</span>
+        </div>
+
+        <div class="product-stock">
+          <div class="stock-bar">
+            <div class="stock-bar-fill" style="width: 93%;"></div>
+          </div>
+          <span class="stock-text">Only <strong id="stockCount">7</strong> remaining</span>
+        </div>
+
+        <div class="product-colors">
+          <span class="color-label">Color</span>
+          <div class="color-options">
+            <button class="color-btn active" data-color="Classic Red" style="background: #8B2500;" aria-label="Classic Red">
+              <span class="color-check"><i class="fa-solid fa-check"></i></span>
+            </button>
+            <button class="color-btn" data-color="Obsidian Black" style="background: #1a1a1a;" aria-label="Obsidian Black">
+              <span class="color-check"><i class="fa-solid fa-check"></i></span>
+            </button>
+            <button class="color-btn" data-color="Heritage Gold" style="background: #B8860B;" aria-label="Heritage Gold">
+              <span class="color-check"><i class="fa-solid fa-check"></i></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="product-quantity">
+          <span class="quantity-label">Quantity</span>
+          <div class="quantity-selector">
+            <button class="qty-btn" id="qtyDecrease" aria-label="Decrease quantity">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <span class="qty-value" id="qtyValue">1</span>
+            <button class="qty-btn" id="qtyIncrease" aria-label="Increase quantity">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="product-actions">
+          <button class="btn btn-outline" id="wishlistBtn" aria-label="Add to wishlist">
+            <i class="fa-regular fa-heart"></i>
+            <span>Wishlist</span>
+          </button>
+          <button class="btn btn-primary" id="addToCartBtn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>Add to Cart</span>
+          </button>
+        </div>
+
+        <div class="product-meta">
+          <div class="meta-item">
+            <i class="fa-solid fa-truck"></i>
+            <span>Complimentary delivery</span>
+          </div>
+          <div class="meta-item">
+            <i class="fa-solid fa-lock"></i>
+            <span>Secure payment</span>
+          </div>
+          <div class="meta-item">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Lifetime satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 8: SHOPPING CART -->
+  <!-- ============================================ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-panel" id="cartPanel" role="dialog" aria-label="Shopping cart">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <i class="fa-regular fa-box-open"></i>
+        <p>Your cart is empty</p>
+        <span>The brick is waiting for you.</span>
+      </div>
+    </div>
+
+    <div class="cart-footer" id="cartFooter">
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotal">$0</span>
+        </div>
+        <div class="summary-row discount-row" id="discountRow">
+          <span>Game Reward Discount</span>
+          <span id="cartDiscount">-$0</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span id="cartShipping">Complimentary</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span id="cartTotal">$0</span>
+        </div>
+      </div>
+      <button class="btn btn-primary cart-checkout" id="checkoutBtn">
+        <span>Checkout</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION 9: CHECKOUT -->
+  <!-- ============================================ -->
+  <div class="checkout-overlay" id="checkoutOverlay"></div>
+  <div class="checkout-panel" id="checkoutPanel" role="dialog" aria-label="Checkout">
+    <div class="checkout-header">
+      <h3 class="checkout-title">Complete Your Purchase</h3>
+      <button class="checkout-close" id="checkoutClose" aria-label="Close checkout">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="checkout-layout">
+      <div class="checkout-form">
+        <div class="form-section">
+          <h4 class="form-section-title">Contact Information</h4>
+          <div class="form-group">
+            <label for="checkoutName">Full Name</label>
+            <input type="text" id="checkoutName" class="form-input" placeholder="Your name" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="checkoutEmail">Email</label>
+            <input type="email" id="checkoutEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="checkoutPhone">Phone</label>
+            <input type="tel" id="checkoutPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4 class="form-section-title">Shipping Address</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="checkoutCountry">Country</label>
+              <select id="checkoutCountry" class="form-input">
+                <option value="">Select country</option>
+                <option value="US">United States</option>
+                <option value="UK">United Kingdom</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="JP">Japan</option>
+                <option value="AE">UAE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="checkoutCity">City</label>
+              <input type="text" id="checkoutCity" class="form-input" placeholder="City">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="checkoutAddress">Address</label>
+            <input type="text" id="checkoutAddress" class="form-input" placeholder="Street address">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4 class="form-section-title">Payment</h4>
+          <div class="payment-methods">
+            <label class="payment-method active">
+              <input type="radio" name="payment" value="card" checked>
+              <i class="fa-regular fa-credit-card"></i>
+              <span>Card</span>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment" value="paypal">
+              <i class="fa-brands fa-paypal"></i>
+              <span>PayPal</span>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment" value="crypto">
+              <i class="fa-brands fa-bitcoin"></i>
+              <span>Crypto</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="checkoutCard">Card Number</label>
+            <input type="text" id="checkoutCard" class="form-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="checkoutExpiry">Expiry</label>
+              <input type="text" id="checkoutExpiry" class="form-input" placeholder="MM/YY">
+            </div>
+            <div class="form-group">
+              <label for="checkoutCVC">CVC</label>
+              <input type="text" id="checkoutCVC" class="form-input" placeholder="000" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkout-summary">
+        <h4 class="form-section-title">Order Summary</h4>
+        <div class="checkout-item" id="checkoutItem">
+          <div class="checkout-item-details">
+            <span class="checkout-item-name">The Original Brick</span>
+            <span class="checkout-item-qty">Qty: <span id="checkoutQty">1</span></span>
+          </div>
+          <span class="checkout-item-price" id="checkoutPrice">$1,999</span>
+        </div>
+        <div class="checkout-summary-details">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="checkoutSubtotal">$0</span>
+          </div>
+          <div class="summary-row">
+            <span>Discount</span>
+            <span id="checkoutDiscount">-$0</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>Complimentary</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax</span>
+            <span id="checkoutTax">$0</span>
+          </div>
+        </div>
+        <div class="checkout-total">
+          <span>Total</span>
+          <span id="checkoutTotal">$0</span>
+        </div>
+        <button class="btn btn-primary checkout-complete-btn" id="completePurchase">
+          <span>Complete Purchase</span>
+          <i class="fa-solid fa-lock"></i>
+        </button>
+        <p class="checkout-secure">
+          <i class="fa-solid fa-shield-halved"></i> Secured with 256-bit encryption
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- ORDER CONFIRMATION -->
+  <!-- ============================================ -->
+  <div class="confirmation-overlay" id="confirmationOverlay"></div>
+  <div class="confirmation-modal" id="confirmationModal" role="dialog" aria-label="Order confirmation">
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <div class="confirmation-content">
+      <div class="confirmation-box">
+        <div class="box-lid" id="boxLid"></div>
+        <div class="box-body" id="boxBody">
+          <div class="box-brick-reveal" id="boxBrickReveal">
+            <div class="reveal-brick"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="confirmation-details">
+        <div class="confirmation-badge">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Purchase Confirmed</span>
+        </div>
+        <h3 class="confirmation-title">Welcome to the <span class="accent">100.</span></h3>
+        <p class="confirmation-text">
+          You are now owner #<span id="ownerNumber">001</span> of 100. The brick will arrive within 14 business days. Some things are worth waiting for.
+        </p>
+
+        <div class="certificate" id="certificate">
+          <div class="certificate-badge">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <h4 class="certificate-title">Certificate of Authenticity</h4>
+          <div class="certificate-details">
+            <div class="cert-row">
+              <span>Owner</span>
+              <span id="certOwner">—</span>
+            </div>
+            <div class="cert-row">
+              <span>Number</span>
+              <span id="certNumber">#001</span>
+            </div>
+            <div class="cert-row">
+              <span>Product</span>
+              <span>The Original Brick</span>
+            </div>
+            <div class="cert-row">
+              <span>Date</span>
+              <span id="certDate">—</span>
+            </div>
+          </div>
+          <div class="cert-seal">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="downloadCert">
+          <i class="fa-solid fa-download"></i>
+          <span>Download Certificate</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION 10: FOOTER -->
+  <!-- ============================================ -->
+  <footer class="footer" data-section>
+    <div class="footer-particles" id="footerParticles"></div>
+
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="footer-logo">BRICK</span>
+        <p class="footer-tagline">The world has enough ordinary things.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4 class="footer-col-title">Navigation</h4>
+          <a href="#story" class="footer-link" data-smooth>Story</a>
+          <a href="#showcase" class="footer-link" data-smooth>Showcase</a>
+          <a href="#features" class="footer-link" data-smooth>Features</a>
+          <a href="#product" class="footer-link" data-smooth>Purchase</a>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Support</h4>
+          <a href="#" class="footer-link">Contact</a>
+          <a href="#" class="footer-link">FAQ</a>
+          <a href="#" class="footer-link">Shipping</a>
+          <a href="#" class="footer-link">Returns</a>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Legal</h4>
+          <a href="#" class="footer-link">Privacy</a>
+          <a href="#" class="footer-link">Terms</a>
+          <a href="#" class="footer-link">Cookies</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-social">
+        <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#" class="social-link" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+      <span class="footer-copyright">&copy; 2026 BRICK. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- ============================================ -->
+  <!-- BACK TO TOP -->
+  <!-- ============================================ -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- ============================================ -->
+  <!-- AMBIENT AUDIO -->
+  <!-- ============================================ -->
+  <audio id="ambientAudio" loop preload="auto" crossorigin="anonymous">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ============================================ -->
+  <!-- SCRIPTS -->
+  <!-- ============================================ -->
+  <script src="js/three-brick.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
