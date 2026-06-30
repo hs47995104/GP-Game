@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   lenis.on('scroll', ScrollTrigger.update);
 
-  // Connect Lenis to GSAP's ScrollTrigger
   gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
   });
@@ -30,69 +29,64 @@ document.addEventListener('DOMContentLoaded', () => {
   const loader = document.getElementById('loader');
 
   function hideLoader() {
+    if (loader.classList.contains('hidden')) return;
     loader.classList.add('hidden');
-    document.body.style.cursor = 'none';
-    // Show cursor after loader
     setTimeout(() => {
-      document.querySelector('.cursor').style.opacity = '1';
+      const cursor = document.querySelector('.cursor');
+      if (cursor) cursor.style.opacity = '1';
     }, 300);
   }
 
-  // Wait for everything to load
-  window.addEventListener('load', () => {
-    setTimeout(hideLoader, 2000);
-  });
-
-  // Fallback: hide after 4s max
-  setTimeout(() => {
-    if (!loader.classList.contains('hidden')) hideLoader();
-  }, 4000);
+  window.addEventListener('load', () => setTimeout(hideLoader, 2000));
+  setTimeout(() => { if (loader && !loader.classList.contains('hidden')) hideLoader(); }, 4000);
 
   // ============================================
   // INTERACTIVE CURSOR
   // ============================================
   const cursor = document.getElementById('cursor');
-  const cursorDot = cursor.querySelector('.cursor-dot');
-  const cursorRing = cursor.querySelector('.cursor-ring');
+  if (cursor) {
+    const cursorDot = cursor.querySelector('.cursor-dot');
+    const cursorRing = cursor.querySelector('.cursor-ring');
+    let cursorX = -100, cursorY = -100;
+    let ringX = -100, ringY = -100;
 
-  let cursorX = -100, cursorY = -100;
-  let ringX = -100, ringY = -100;
+    document.addEventListener('mousemove', (e) => {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+    });
 
-  document.addEventListener('mousemove', (e) => {
-    cursorX = e.clientX;
-    cursorY = e.clientY;
-  });
+    function animateCursor() {
+      ringX += (cursorX - ringX) * 0.08;
+      ringY += (cursorY - ringY) * 0.08;
+      cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+      cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
 
-  function animateCursor() {
-    ringX += (cursorX - ringX) * 0.08;
-    ringY += (cursorY - ringY) * 0.08;
+    document.querySelectorAll('a, button, .hotspot-dot, .color-btn, .gallery-thumb, .gallery-thumb, .qty-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
 
-    cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-    cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
-
-  // Hover effect on interactive elements
-  document.querySelectorAll('a, button, .hotspot-dot, .color-btn, .gallery-thumb').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-  });
-
-  // Hide cursor on touch devices
-  if ('ontouchstart' in window) {
-    cursor.style.display = 'none';
+    if ('ontouchstart' in window) cursor.style.display = 'none';
   }
 
   // ============================================
   // SCROLL PROGRESS BAR
   // ============================================
   const progressFill = document.getElementById('scrollProgressFill');
+  let scrollTicking = false;
   window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / docHeight) * 100;
-    progressFill.style.width = progress + '%';
+    if (!scrollTicking) {
+      requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        progressFill.style.width = ((scrollTop / docHeight) * 100) + '%';
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
   });
 
   // ============================================
@@ -102,12 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.getElementById('menuToggle');
   const mobileMenu = document.getElementById('mobileMenu');
 
-  // Navbar background on scroll
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 50);
-  });
+  }, { passive: true });
 
-  // Mobile menu
   menuToggle.addEventListener('click', () => {
     mobileMenu.classList.toggle('show');
     const icon = menuToggle.querySelector('i');
@@ -121,16 +113,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Smooth navigation
   document.querySelectorAll('[data-smooth]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
+      // Close any open modals
+      const gameResult = document.getElementById('gameResult');
+      if (gameResult?.classList.contains('show')) {
+        gameResult.classList.remove('show');
+        document.body.style.overflow = '';
+      }
       const target = link.getAttribute('href');
       if (target && target.startsWith('#')) {
         const el = document.querySelector(target);
-        if (el) {
-          lenis.scrollTo(el, { duration: 1.5 });
-        }
+        if (el) lenis.scrollTo(el, { duration: 1.5 });
       }
     });
   });
@@ -141,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
     backToTop.classList.toggle('show', window.scrollY > 500);
-  });
+  }, { passive: true });
   backToTop.addEventListener('click', () => {
     lenis.scrollTo('#hero', { duration: 1.5 });
   });
@@ -171,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function createParticles(containerId, count = 60) {
     const container = document.getElementById(containerId);
     if (!container) return;
-
     for (let i = 0; i < count; i++) {
       const particle = document.createElement('div');
       particle.className = 'particle';
@@ -186,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Add floating animation
   const styleSheet = document.createElement('style');
   styleSheet.textContent = `
     @keyframes floatParticle {
@@ -202,9 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
   createParticles('footerParticles', 40);
 
   // ============================================
-  // THREE.JS BRICK — Hero Scene
+  // THREE.JS BRICK
   // ============================================
-  THREE_BRICK.init('heroCanvas');
+  if (typeof THREE !== 'undefined' && typeof THREE_BRICK !== 'undefined') {
+    THREE_BRICK.init('heroCanvas');
+  }
 
   // ============================================
   // STORY — Interactive Carousel
@@ -213,9 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyDots = document.getElementById('storyDots');
   const storyPrev = document.querySelector('.story-prev');
   const storyNext = document.querySelector('.story-next');
+  const storyCarousel = document.querySelector('.story-carousel');
   let currentStory = 0;
 
-  // Create dots
   storyItems.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.className = 'story-dot' + (i === 0 ? ' active' : '');
@@ -225,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function goToStory(index) {
+    if (index === currentStory && storyItems[currentStory]?.classList.contains('active')) return;
     storyItems.forEach((item, i) => {
       item.classList.toggle('active', i === index);
     });
@@ -234,16 +230,10 @@ document.addEventListener('DOMContentLoaded', () => {
     currentStory = index;
   }
 
-  storyPrev.addEventListener('click', () => {
-    goToStory(Math.max(0, currentStory - 1));
-  });
-  storyNext.addEventListener('click', () => {
-    goToStory(Math.min(storyItems.length - 1, currentStory + 1));
-  });
+  storyPrev.addEventListener('click', () => goToStory(Math.max(0, currentStory - 1)));
+  storyNext.addEventListener('click', () => goToStory(Math.min(storyItems.length - 1, currentStory + 1)));
 
-  // ============================================
-  // STORY SECTION — Clay Particles
-  // ============================================
+  // Clay particles
   const clayContainer = document.getElementById('clayParticles');
   if (clayContainer) {
     for (let i = 0; i < 30; i++) {
@@ -257,9 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ============================================
-  // STORY SECTION — Fire Particles
-  // ============================================
+  // Fire particles
   const fireContainer = document.getElementById('fireContainer');
   if (fireContainer) {
     for (let i = 0; i < 15; i++) {
@@ -273,9 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ============================================
-  // STORY SECTION — Craft Grid
-  // ============================================
+  // Craft grid
   const craftGrid = document.querySelector('.craft-grid');
   if (craftGrid) {
     for (let i = 0; i < 16; i++) {
@@ -290,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // GSAP + SCROLLTRIGGER — Cinematic Animations
   // ============================================
 
-  // --- HERO Section ---
+  // Hero entrance
   const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   heroTl
     .from('.hero-badge', { y: 30, opacity: 0, duration: 1.2, delay: 0.5 })
@@ -299,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .from('.hero-actions .btn', { y: 30, opacity: 0, stagger: 0.2, duration: 0.8 }, '-=0.4')
     .from('.hero-scroll-indicator', { opacity: 0, duration: 1 }, '-=0.2');
 
-  // --- STORY Section ---
+  // Story section — scroll-based navigation
   gsap.utils.toArray('.story-item').forEach((item, i) => {
     ScrollTrigger.create({
       trigger: item,
@@ -308,16 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- FEATURES Section ---
-  gsap.utils.toArray('.feature-card').forEach((card, i) => {
+  // Features — staggered reveal (one-time)
+  gsap.utils.toArray('.feature-card').forEach((card) => {
     ScrollTrigger.create({
       trigger: card,
       start: 'top 85%',
+      once: true,
       onEnter: () => {
         gsap.to(card, {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
+          y: 0, opacity: 1, duration: 0.8,
           delay: parseFloat(card.dataset.delay) || 0,
           ease: 'power3.out',
         });
@@ -326,138 +311,66 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.set(card, { y: 40, opacity: 0 });
   });
 
-  // --- SHOWCASE Section ---
+  // Showcase
   ScrollTrigger.create({
-    trigger: '.showcase',
-    start: 'top 70%',
+    trigger: '.showcase', start: 'top 70%', once: true,
     onEnter: () => {
-      gsap.from('.showcase-viewer', {
-        scale: 0.9,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-      });
+      gsap.from('.showcase-viewer', { scale: 0.9, opacity: 0, duration: 1, ease: 'power3.out' });
       gsap.from('.spec-item', {
-        x: 30,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.6,
-        ease: 'power3.out',
-        delay: 0.3,
+        x: 30, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out', delay: 0.3,
       });
     },
   });
 
-  // --- GAME Section ---
+  // Game
   ScrollTrigger.create({
-    trigger: '.game',
-    start: 'top 70%',
+    trigger: '.game', start: 'top 70%', once: true,
     onEnter: () => {
-      gsap.from('.game-hud', {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      });
-      gsap.from('.game-board', {
-        scale: 0.95,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.2,
-        ease: 'power3.out',
-      });
-      gsap.from('.game-controls', {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        delay: 0.4,
-        ease: 'power3.out',
-      });
+      gsap.from('.game-hud', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' });
+      gsap.from('.game-board', { scale: 0.95, opacity: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' });
+      gsap.from('.game-controls', { y: 20, opacity: 0, duration: 0.6, delay: 0.4, ease: 'power3.out' });
     },
   });
 
-  // --- TESTIMONIALS Section ---
+  // Testimonials
   ScrollTrigger.create({
-    trigger: '.testimonials',
-    start: 'top 70%',
+    trigger: '.testimonials', start: 'top 70%', once: true,
     onEnter: () => {
-      gsap.from('.testimonials-track', {
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-      });
+      gsap.from('.testimonials-track', { opacity: 0, duration: 1, ease: 'power3.out' });
     },
   });
 
-  // --- PRODUCT Section ---
+  // Product
   ScrollTrigger.create({
-    trigger: '.product',
-    start: 'top 60%',
+    trigger: '.product', start: 'top 60%', once: true,
     onEnter: () => {
-      gsap.from('.product-gallery', {
-        x: -30,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-      });
+      gsap.from('.product-gallery', { x: -30, opacity: 0, duration: 1, ease: 'power3.out' });
       gsap.from('.product-details > *', {
-        y: 20,
-        opacity: 0,
-        stagger: 0.08,
-        duration: 0.6,
-        ease: 'power3.out',
-        delay: 0.2,
+        y: 20, opacity: 0, stagger: 0.08, duration: 0.6, ease: 'power3.out', delay: 0.2,
       });
     },
   });
 
-  // --- FOOTER Section ---
+  // Footer
   ScrollTrigger.create({
-    trigger: '.footer',
-    start: 'top 80%',
+    trigger: '.footer', start: 'top 80%', once: true,
     onEnter: () => {
-      gsap.from('.footer-brand', {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      });
-      gsap.from('.footer-col', {
-        y: 20,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.6,
-        ease: 'power3.out',
-        delay: 0.2,
-      });
+      gsap.from('.footer-brand', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' });
+      gsap.from('.footer-col', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out', delay: 0.2 });
     },
   });
 
-  // --- SECTION LABELS & TITLES ---
+  // Section labels & titles — generic reveal
   document.querySelectorAll('.section[data-section]').forEach((section) => {
     const label = section.querySelector('.section-label');
     const title = section.querySelector('.section-title');
-
     ScrollTrigger.create({
-      trigger: section,
-      start: 'top 75%',
+      trigger: section, start: 'top 75%', once: true,
       onEnter: () => {
-        if (label) {
-          gsap.from(label, {
-            x: -30,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-          });
-        }
+        if (label) gsap.from(label, { x: -30, opacity: 0, duration: 0.8, ease: 'power3.out' });
         if (title) {
           gsap.from(title.querySelectorAll('.title-reveal'), {
-            y: 60,
-            opacity: 0,
-            stagger: 0.15,
-            duration: 0.8,
-            ease: 'power3.out',
-            delay: 0.2,
+            y: 60, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power3.out', delay: 0.2,
           });
         }
       },
@@ -469,11 +382,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   function animateCounter(el, target, duration = 2000) {
     const isFloat = target.toString().includes('.');
-    const start = 0;
     const startTime = performance.now();
+    const finalStr = isFloat ? target.toFixed(2) + '%' : String(Math.floor(target));
 
-    function update(currentTime) {
-      const elapsed = currentTime - startTime;
+    function update(now) {
+      const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = start + (target - start) * eased;
@@ -483,139 +396,141 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         el.textContent = Math.floor(current);
       }
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      }
+      if (progress < 1) requestAnimationFrame(update);
     }
     requestAnimationFrame(update);
   }
 
-  // Observe stat numbers
-  const observer = new IntersectionObserver((entries) => {
+  const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const el = entry.target;
         const target = parseFloat(el.dataset.count);
-        if (!isNaN(target)) {
-          animateCounter(el, target);
-        }
-        observer.unobserve(el);
+        if (!isNaN(target)) animateCounter(el, target);
+        counterObserver.unobserve(el);
       }
     });
   }, { threshold: 0.5 });
 
-  document.querySelectorAll('[data-count]').forEach(el => observer.observe(el));
+  document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
   // ============================================
-  // MOUSE-FOLLOW LIGHTING for Hero
+  // MOUSE-FOLLOW LIGHTING
   // ============================================
   const heroLighting = document.getElementById('heroLighting');
   if (heroLighting) {
+    let lightRafId = null;
     document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth) * 100;
-      const y = (e.clientY / window.innerHeight) * 100;
-      heroLighting.style.background = `
-        radial-gradient(600px circle at ${x}% ${y}%, rgba(198, 40, 40, 0.08), transparent 60%)
-      `;
+      if (lightRafId) cancelAnimationFrame(lightRafId);
+      lightRafId = requestAnimationFrame(() => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        heroLighting.style.background =
+          `radial-gradient(600px circle at ${x}% ${y}%, rgba(198, 40, 40, 0.08), transparent 60%)`;
+        lightRafId = null;
+      });
     });
   }
 
   // ============================================
-  // SHOWCASE — Interactive 3D (simplified overlay)
+  // SHOWCASE — Interactive 3D Overlay
   // ============================================
   const showcaseCanvas = document.getElementById('showcaseCanvas');
   if (showcaseCanvas) {
-    // Simplified 3D-like interaction with CSS transforms
     let isRotating = false;
-    let rotationX = 0, rotationY = 0;
+    let rotX = 0, rotY = 0;
+    let zoom = 1;
 
-    showcaseCanvas.addEventListener('mousemove', (e) => {
-      if (!isRotating) return;
-      const rect = showcaseCanvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      rotationY = (x - 0.5) * 30;
-      rotationX = (0.5 - y) * 20;
-      showcaseCanvas.style.transform = `rotateY(${rotationY}deg) rotateX(${rotationX}deg)`;
-    });
+    const showcaseViewer = showcaseCanvas.closest('.showcase-viewer');
+    if (showcaseViewer) {
+      showcaseViewer.addEventListener('mousemove', (e) => {
+        if (!isRotating) return;
+        const rect = showcaseViewer.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        rotY = (x - 0.5) * 30;
+        rotX = (0.5 - y) * 20;
+        applyShowcaseTransform();
+      });
+    }
 
-    document.getElementById('rotateToggle').addEventListener('click', function() {
+    function applyShowcaseTransform() {
+      showcaseCanvas.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${zoom})`;
+    }
+
+    document.getElementById('rotateToggle').addEventListener('click', function () {
       isRotating = !isRotating;
       this.classList.toggle('active');
       if (!isRotating) {
-        showcaseCanvas.style.transform = '';
+        rotX = 0;
+        rotY = 0;
+        applyShowcaseTransform();
       }
     });
 
     document.getElementById('resetView').addEventListener('click', () => {
-      showcaseCanvas.style.transform = '';
+      rotX = 0;
+      rotY = 0;
+      zoom = 1;
       isRotating = false;
       document.getElementById('rotateToggle').classList.remove('active');
+      document.getElementById('zoomLevel').textContent = '1.0';
+      applyShowcaseTransform();
     });
 
-    // Zoom
-    let zoom = 1;
     document.getElementById('zoomIn').addEventListener('click', () => {
-      zoom = Math.min(2, zoom + 0.1);
+      zoom = Math.min(2, +(zoom + 0.1).toFixed(1));
       document.getElementById('zoomLevel').textContent = zoom.toFixed(1);
-      showcaseCanvas.style.transform += ` scale(${zoom})`;
+      applyShowcaseTransform();
     });
+
     document.getElementById('zoomOut').addEventListener('click', () => {
-      zoom = Math.max(0.5, zoom - 0.1);
+      zoom = Math.max(0.5, +(zoom - 0.1).toFixed(1));
       document.getElementById('zoomLevel').textContent = zoom.toFixed(1);
-      showcaseCanvas.style.transform = `rotateY(${rotationY}deg) rotateX(${rotationX}deg) scale(${zoom})`;
+      applyShowcaseTransform();
     });
   }
 
   // ============================================
-  // FAKE LIVE PURCHASES (social proof)
+  // FAKE LIVE PURCHASES
   // ============================================
   const fakeNames = [
     'Alex M.', 'Sarah K.', 'David C.', 'Emma W.',
     'James L.', 'Sophia R.', 'Oliver T.', 'Isabella N.',
-    'Lucas P.', 'Mia H.', 'Ethan G.', 'Aria F.'
+    'Lucas P.', 'Mia H.', 'Ethan G.', 'Aria F.',
   ];
   const fakeLocations = [
     'New York', 'London', 'Tokyo', 'Paris', 'Berlin',
-    'Dubai', 'Milan', 'Sydney', 'Seoul', 'Singapore'
+    'Dubai', 'Milan', 'Sydney', 'Seoul', 'Singapore',
   ];
 
   function createFakePurchase() {
     const toast = document.createElement('div');
+    toast.setAttribute('aria-live', 'polite');
+    toast.setAttribute('aria-atomic', 'true');
     const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
     const location = fakeLocations[Math.floor(Math.random() * fakeLocations.length)];
-
     toast.style.cssText = `
-      position: fixed;
-      bottom: 30px;
-      left: 30px;
+      position: fixed; bottom: 30px; left: 30px;
       background: rgba(20, 20, 20, 0.9);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 100;
-      font-size: 13px;
-      opacity: 1;
-      transition: all 0.5s ease;
+      border-radius: 12px; padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+      z-index: 100; font-size: 13px;
+      opacity: 1; transition: all 0.5s ease;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 280px;
-      pointer-events: none;
+      max-width: 280px; pointer-events: none;
     `;
     toast.innerHTML = `
-      <div style="width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; flex-shrink: 0; animation: pulse-dot 2s infinite;"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#4CAF50;flex-shrink:0;animation:pulse-dot 2s infinite;"></div>
       <div>
-        <strong style="color: white; font-weight: 500;">${name}</strong>
-        <span style="color: rgba(255,255,255,0.5);"> from ${location}</span>
-        <span style="color: rgba(255,255,255,0.7); display: block; font-size: 12px;">secured their brick</span>
+        <strong style="color:white;font-weight:500;">${name}</strong>
+        <span style="color:rgba(255,255,255,0.5);"> from ${location}</span>
+        <span style="color:rgba(255,255,255,0.7);display:block;font-size:12px;">secured their brick</span>
       </div>
     `;
     document.body.appendChild(toast);
-
     setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(-20px)';
@@ -623,25 +538,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
 
-  // Show fake purchases periodically
-  setInterval(createFakePurchase, 8000);
+  let fakePurchaseInterval = setInterval(createFakePurchase, 8000);
   setTimeout(createFakePurchase, 3000);
 
-  // ============================================
-  // INITIALIZE CART
-  // ============================================
-  CART.init();
+  // Pause fake purchases when tab hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(fakePurchaseInterval);
+    } else {
+      fakePurchaseInterval = setInterval(createFakePurchase, 8000);
+    }
+  });
 
   // ============================================
-  // INITIALIZE GAME
+  // INITIALIZE CART & GAME
   // ============================================
-  BRICK_GAME.init();
+  if (typeof CART !== 'undefined') CART.init();
+  if (typeof BRICK_GAME !== 'undefined') BRICK_GAME.init();
 
   // ============================================
-  // STOCK COUNTER (decreases over time)
+  // STOCK COUNTER
   // ============================================
   let stockCount = 7;
-  setInterval(() => {
+  let stockInterval = setInterval(() => {
     if (stockCount > 1 && Math.random() > 0.7) {
       stockCount--;
       document.getElementById('stockCount').textContent = stockCount;
@@ -649,36 +568,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 15000);
 
-  // ============================================
-  // CHECKOUT — Country selects
-  // ============================================
-  // Payment formatting
-  document.getElementById('checkoutCard').addEventListener('input', function() {
-    let val = this.value.replace(/\D/g, '');
-    val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
-    this.value = val;
-  });
-
-  document.getElementById('checkoutExpiry').addEventListener('input', function() {
-    let val = this.value.replace(/\D/g, '');
-    if (val.length >= 2) {
-      val = val.substring(0, 2) + '/' + val.substring(2);
-    }
-    this.value = val;
-  });
-
-  document.getElementById('checkoutCVC').addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '').substring(0, 3);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearInterval(stockInterval);
   });
 
   // ============================================
-  // CONFIRMATION — Close on overlay click
+  // PAYMENT FORMATTING
   // ============================================
-  confirmationOverlay = document.getElementById('confirmationOverlay');
-  if (confirmationOverlay) {
-    confirmationOverlay.addEventListener('click', () => {
-      document.getElementById('confirmationModal').classList.remove('show');
-      confirmationOverlay.classList.remove('show');
+  const cardInput = document.getElementById('checkoutCard');
+  const expiryInput = document.getElementById('checkoutExpiry');
+  const cvcInput = document.getElementById('checkoutCVC');
+
+  if (cardInput) {
+    cardInput.addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ').substring(0, 19);
+    });
+  }
+  if (expiryInput) {
+    expiryInput.addEventListener('input', function () {
+      let val = this.value.replace(/\D/g, '');
+      if (val.length >= 2) val = val.substring(0, 2) + '/' + val.substring(2);
+      this.value = val.substring(0, 5);
+    });
+  }
+  if (cvcInput) {
+    cvcInput.addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').substring(0, 4);
+    });
+  }
+
+  // ============================================
+  // CONFIRMATION — Close
+  // ============================================
+  const confirmOverlay = document.getElementById('confirmationOverlay');
+  const confirmModal = document.getElementById('confirmationModal');
+  if (confirmOverlay) {
+    confirmOverlay.addEventListener('click', () => {
+      confirmModal.classList.remove('show');
+      confirmOverlay.classList.remove('show');
       document.body.style.overflow = '';
     });
   }
@@ -688,23 +615,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      // Close mobile menu
       mobileMenu.classList.remove('show');
       menuToggle.querySelector('i').className = 'fa-solid fa-bars';
 
-      // Close cart
-      if (cartPanel.classList.contains('show')) {
-        document.getElementById('cartClose').click();
+      const cartClose = document.getElementById('cartClose');
+      if (cartClose && document.getElementById('cartPanel').classList.contains('show')) {
+        cartClose.click();
       }
 
-      // Close checkout
-      if (checkoutPanel.classList.contains('show')) {
-        document.getElementById('checkoutClose').click();
+      const checkoutClose = document.getElementById('checkoutClose');
+      if (checkoutClose && document.getElementById('checkoutPanel').classList.contains('show')) {
+        checkoutClose.click();
       }
 
-      // Close confirmation
-      const confirmModal = document.getElementById('confirmationModal');
-      const confirmOverlay = document.getElementById('confirmationOverlay');
       if (confirmModal?.classList.contains('show')) {
         confirmModal.classList.remove('show');
         confirmOverlay.classList.remove('show');
@@ -714,9 +637,65 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // PERFORMANCE — Lazy load images (placeholder)
+  // FOCUS TRAP for modals
   // ============================================
-  // Images are mostly CSS-based, but we add data-src support
+  function trapFocus(containerEl) {
+    const focusableEls = containerEl.querySelectorAll(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableEls[0];
+    const lastFocusable = focusableEls[focusableEls.length - 1];
+
+    function handler(e) {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          e.preventDefault();
+          firstFocusable.focus();
+        }
+      }
+    }
+    containerEl.addEventListener('keydown', handler);
+    if (firstFocusable) firstFocusable.focus();
+    return () => containerEl.removeEventListener('keydown', handler);
+  }
+
+  // Apply focus trap to modals
+  const modals = [document.getElementById('cartPanel'), document.getElementById('checkoutPanel'), confirmModal];
+  const modalObservers = [];
+  modals.forEach(modal => {
+    if (!modal) return;
+    const observer = new MutationObserver(() => {
+      if (modal.classList.contains('show')) {
+        modalObservers.push(trapFocus(modal));
+      }
+    });
+    observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  // ============================================
+  // ACCESSIBILITY — Focus management
+  // ============================================
+  document.addEventListener('focusin', (e) => {
+    if (e.target.matches('a, button, input, select, textarea, [tabindex]')) {
+      e.target.style.outline = '2px solid var(--accent-red)';
+      e.target.style.outlineOffset = '2px';
+    }
+  });
+  document.addEventListener('focusout', (e) => {
+    if (e.target.matches('a, button, input, select, textarea, [tabindex]')) {
+      e.target.style.outline = '';
+    }
+  });
+
+  // ============================================
+  // LAZY LOAD IMAGES
+  // ============================================
   document.querySelectorAll('img[data-src]').forEach(img => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -731,30 +710,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // ACCESSIBILITY — Focus management
+  // RESIZE
   // ============================================
-  document.addEventListener('focusin', (e) => {
-    if (e.target.matches('a, button, input, select, textarea, [tabindex]')) {
-      e.target.style.outline = '2px solid var(--accent-red)';
-      e.target.style.outlineOffset = '2px';
-    }
-  });
+  window.addEventListener('resize', () => lenis.resize());
 
-  document.addEventListener('focusout', (e) => {
-    if (e.target.matches('a, button, input, select, textarea, [tabindex]')) {
-      e.target.style.outline = '';
-    }
-  });
-
-  // ============================================
-  // WINDOW RESIZE — Update Lenis
-  // ============================================
-  window.addEventListener('resize', () => {
-    lenis.resize();
-  });
-
-  // Log completion
-  console.log('%c BRICK ', 'background: #C62828; color: white; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 4px;');
+  console.log(
+    '%c BRICK ',
+    'background: #C62828; color: white; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 4px;'
+  );
   console.log('%c The brick that chooses you. ', 'color: #D4A843; font-size: 14px;');
 
-}); // End DOMContentLoaded
+});

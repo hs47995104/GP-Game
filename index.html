@@ -40,7 +40,7 @@
         <div class="loader-brick-face"></div>
         <div class="loader-brick-face"></div>
       </div>
-      <p class="loader-text">Crafting your experience</p>
+      <p class="loader-text" aria-hidden="true">Crafting your experience</p>
       <div class="loader-bar">
         <div class="loader-bar-fill"></div>
       </div>
@@ -116,11 +116,11 @@
   <!-- SECTION 1: HERO -->
   <!-- ============================================ -->
   <section id="hero" class="section hero" data-section>
-    <div class="hero-canvas" id="heroCanvas"></div>
+    <div class="hero-canvas" id="heroCanvas" aria-hidden="true"></div>
 
     <div class="hero-overlay"></div>
 
-    <div class="hero-particles" id="heroParticles"></div>
+    <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
 
     <div class="hero-content">
       <div class="hero-badge">
@@ -519,7 +519,7 @@
     </div>
 
     <!-- Game Result Modal -->
-    <div class="game-result" id="gameResult">
+    <div class="game-result" id="gameResult" role="dialog" aria-modal="true" aria-label="Game results">
       <div class="result-backdrop"></div>
       <div class="result-modal">
         <div class="result-tier" id="resultTier">
@@ -856,15 +856,15 @@
           <h4 class="form-section-title">Contact Information</h4>
           <div class="form-group">
             <label for="checkoutName">Full Name</label>
-            <input type="text" id="checkoutName" class="form-input" placeholder="Your name" required autocomplete="name">
+            <input type="text" id="checkoutName" class="form-input" placeholder="Your name" required aria-required="true" autocomplete="name">
           </div>
           <div class="form-group">
             <label for="checkoutEmail">Email</label>
-            <input type="email" id="checkoutEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+            <input type="email" id="checkoutEmail" class="form-input" placeholder="your@email.com" required aria-required="true" autocomplete="email">
           </div>
           <div class="form-group">
             <label for="checkoutPhone">Phone</label>
-            <input type="tel" id="checkoutPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
+            <input type="tel" id="checkoutPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel" aria-required="false">
           </div>
         </div>
 

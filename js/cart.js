@@ -12,7 +12,6 @@ const CART = (() => {
   const FINAL_PRICE = 1999;
   const TAX_RATE = 0.08;
 
-  // DOM refs
   let cartPanel, cartOverlay, cartItems, cartCount;
   let cartSubtotal, cartDiscount, cartTotal, discountRow;
   let checkoutPanel, checkoutOverlay;
@@ -21,7 +20,6 @@ const CART = (() => {
   let ownerNumber, certOwner, certNumber, certDate;
 
   function init() {
-    // Cart elements
     cartPanel = document.getElementById('cartPanel');
     cartOverlay = document.getElementById('cartOverlay');
     cartItems = document.getElementById('cartItems');
@@ -31,7 +29,6 @@ const CART = (() => {
     cartTotal = document.getElementById('cartTotal');
     discountRow = document.getElementById('discountRow');
 
-    // Checkout elements
     checkoutPanel = document.getElementById('checkoutPanel');
     checkoutOverlay = document.getElementById('checkoutOverlay');
     checkoutQty = document.getElementById('checkoutQty');
@@ -41,7 +38,6 @@ const CART = (() => {
     checkoutTax = document.getElementById('checkoutTax');
     checkoutTotal = document.getElementById('checkoutTotal');
 
-    // Confirmation elements
     confirmationModal = document.getElementById('confirmationModal');
     confirmationOverlay = document.getElementById('confirmationOverlay');
     ownerNumber = document.getElementById('ownerNumber');
@@ -49,23 +45,18 @@ const CART = (() => {
     certNumber = document.getElementById('certNumber');
     certDate = document.getElementById('certDate');
 
-    // Load discount from game
     loadDiscount();
 
-    // Cart toggle
     document.getElementById('cartToggle').addEventListener('click', toggleCart);
     document.getElementById('cartClose').addEventListener('click', toggleCart);
     cartOverlay.addEventListener('click', toggleCart);
 
-    // Checkout
     document.getElementById('checkoutBtn').addEventListener('click', openCheckout);
     document.getElementById('checkoutClose').addEventListener('click', closeCheckout);
     checkoutOverlay.addEventListener('click', closeCheckout);
 
-    // Add to cart
     document.getElementById('addToCartBtn').addEventListener('click', addToCart);
 
-    // Quantity
     document.getElementById('qtyIncrease').addEventListener('click', () => {
       quantity = Math.min(quantity + 1, 5);
       updateQuantityUI();
@@ -75,7 +66,6 @@ const CART = (() => {
       updateQuantityUI();
     });
 
-    // Color selection
     document.querySelectorAll('.color-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -84,10 +74,8 @@ const CART = (() => {
       });
     });
 
-    // Wishlist
     document.getElementById('wishlistBtn').addEventListener('click', toggleWishlist);
 
-    // Payment method selection
     document.querySelectorAll('.payment-method').forEach(m => {
       m.addEventListener('click', () => {
         document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('active'));
@@ -96,17 +84,14 @@ const CART = (() => {
       });
     });
 
-    // Complete purchase
     document.getElementById('completePurchase').addEventListener('click', completePurchase);
     document.getElementById('downloadCert').addEventListener('click', downloadCertificate);
 
-    // Listen for game complete
     window.addEventListener('gameComplete', (e) => {
       discount = e.detail.discount;
       updatePricing();
     });
 
-    // Gallery thumbs
     document.querySelectorAll('.gallery-thumb').forEach(thumb => {
       thumb.addEventListener('click', () => {
         document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
@@ -114,7 +99,6 @@ const CART = (() => {
       });
     });
 
-    // Update initial pricing
     updatePricing();
   }
 
@@ -122,7 +106,6 @@ const CART = (() => {
     const saved = localStorage.getItem('brickDiscount');
     discount = saved ? parseInt(saved) : 0;
     if (discount > 0) {
-      // Show discount indicator on product
       document.getElementById('productDiscountBadge').textContent = '-' + discount + '%';
       document.getElementById('productDiscountBadge').style.display = '';
     }
@@ -132,6 +115,7 @@ const CART = (() => {
     const discountedPrice = FINAL_PRICE - (FINAL_PRICE * discount / 100);
     document.getElementById('productPrice').textContent = '$' + discountedPrice.toLocaleString();
     document.getElementById('productOriginalPrice').textContent = discount > 0 ? '$' + FINAL_PRICE.toLocaleString() : '';
+    document.getElementById('productOriginalPrice').style.display = discount > 0 ? '' : 'none';
     document.getElementById('productDiscountBadge').textContent = discount > 0 ? '-' + discount + '%' : '';
     document.getElementById('productDiscountBadge').style.display = discount > 0 ? '' : 'none';
   }
@@ -146,7 +130,7 @@ const CART = (() => {
       existing.qty += quantity;
     } else {
       items.push({
-        id: Date.now(),
+        id: Date.now() + Math.random(),
         name: 'The Original Brick',
         color: selectedColor,
         qty: quantity,
@@ -163,18 +147,19 @@ const CART = (() => {
   function removeItem(id) {
     items = items.filter(i => i.id !== id);
     updateCartUI();
+    if (items.length === 0) toggleCart();
   }
 
   function updateItemQty(id, delta) {
     const item = items.find(i => i.id === id);
-    if (item) {
-      item.qty = Math.max(1, item.qty + delta);
-      if (item.qty === 0) {
-        removeItem(id);
-        return;
-      }
-      updateCartUI();
+    if (!item) return;
+    const newQty = item.qty + delta;
+    if (newQty <= 0) {
+      removeItem(id);
+      return;
     }
+    item.qty = newQty;
+    updateCartUI();
   }
 
   function updateCartUI() {
@@ -197,7 +182,6 @@ const CART = (() => {
     }
 
     discountRow.style.display = discount > 0 ? 'flex' : 'none';
-
     let html = '';
     let subtotal = 0;
 
@@ -207,26 +191,36 @@ const CART = (() => {
       html += `
         <div class="cart-item">
           <div class="cart-item-image">
-            <div class="thumb-brick"></div>
+            <div class="thumb-brick" style="width:36px;height:20px;background:var(--accent-red-dark);border-radius:3px;"></div>
           </div>
           <div class="cart-item-details">
-            <span class="cart-item-name">${item.name}</span>
-            <span class="cart-item-variant">${item.color}</span>
+            <span class="cart-item-name">${escapeHtml(item.name)}</span>
+            <span class="cart-item-variant">${escapeHtml(item.color)}</span>
             <div class="cart-item-bottom">
               <div class="cart-item-qty">
-                <button onclick="CART.updateItemQty(${item.id}, -1)"><i class="fa-solid fa-minus"></i></button>
+                <button data-cart-dec="${item.id}" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
                 <span>${item.qty}</span>
-                <button onclick="CART.updateItemQty(${item.id}, 1)"><i class="fa-solid fa-plus"></i></button>
+                <button data-cart-inc="${item.id}" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
               </div>
-              <span class="cart-item-price">$${(itemTotal).toLocaleString()}</span>
+              <span class="cart-item-price">$${itemTotal.toLocaleString()}</span>
             </div>
-            <button class="cart-item-remove" onclick="CART.removeItem(${item.id})">Remove</button>
+            <button class="cart-item-remove" data-cart-remove="${item.id}">Remove</button>
           </div>
         </div>
       `;
     });
 
     cartItems.innerHTML = html;
+
+    cartItems.querySelectorAll('[data-cart-dec]').forEach(btn => {
+      btn.addEventListener('click', () => updateItemQty(parseFloat(btn.dataset.cartDec), -1));
+    });
+    cartItems.querySelectorAll('[data-cart-inc]').forEach(btn => {
+      btn.addEventListener('click', () => updateItemQty(parseFloat(btn.dataset.cartInc), 1));
+    });
+    cartItems.querySelectorAll('[data-cart-remove]').forEach(btn => {
+      btn.addEventListener('click', () => removeItem(parseFloat(btn.dataset.cartRemove)));
+    });
 
     const discountAmount = Math.round(subtotal * discount / 100);
     const total = subtotal - discountAmount;
@@ -236,11 +230,20 @@ const CART = (() => {
     cartTotal.textContent = '$' + total.toLocaleString();
   }
 
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
   function toggleCart() {
     const show = !cartPanel.classList.contains('show');
     cartPanel.classList.toggle('show');
     cartOverlay.classList.toggle('show');
     document.body.style.overflow = show ? 'hidden' : '';
+    if (!show && checkoutPanel.classList.contains('show')) {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   function openCheckout() {
@@ -251,7 +254,6 @@ const CART = (() => {
     const discountAmount = Math.round(subtotal * discount / 100);
     const tax = Math.round((subtotal - discountAmount) * TAX_RATE);
     const total = subtotal - discountAmount + tax;
-
     const totalQty = items.reduce((sum, i) => sum + i.qty, 0);
 
     checkoutQty.textContent = totalQty;
@@ -269,53 +271,77 @@ const CART = (() => {
   function closeCheckout() {
     checkoutPanel.classList.remove('show');
     checkoutOverlay.classList.remove('show');
-    document.body.style.overflow = '';
+    if (!cartPanel.classList.contains('show')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function validateForm() {
+    const name = document.getElementById('checkoutName');
+    const email = document.getElementById('checkoutEmail');
+    const nameVal = name.value.trim();
+    const emailVal = email.value.trim();
+
+    clearErrors();
+
+    if (!nameVal) {
+      showFieldError(name, 'Name is required');
+      name.focus();
+      return false;
+    }
+    if (!emailVal || !emailVal.includes('@')) {
+      showFieldError(email, 'Valid email is required');
+      if (!emailVal) email.focus();
+      return false;
+    }
+    return { name: nameVal, email: emailVal };
+  }
+
+  function showFieldError(input, message) {
+    input.style.borderColor = '#C62828';
+    input.setAttribute('aria-invalid', 'true');
+  }
+
+  function clearErrors() {
+    document.querySelectorAll('.checkout-form .form-input').forEach(el => {
+      el.style.borderColor = '';
+      el.removeAttribute('aria-invalid');
+    });
   }
 
   function completePurchase() {
-    // Validate
-    const name = document.getElementById('checkoutName').value.trim();
-    const email = document.getElementById('checkoutEmail').value.trim();
-    if (!name || !email) {
-      showNotification('Please fill in required fields', 'Name and email are required');
-      return;
-    }
+    const result = validateForm();
+    if (!result) return;
 
     closeCheckout();
 
-    // Generate owner number (random between 1-100)
     const ownerNum = String(Math.floor(Math.random() * 100) + 1).padStart(3, '0');
     const today = new Date().toLocaleDateString('en-US', {
       year: 'numeric', month: 'long', day: 'numeric'
     });
 
-    // Update certificate
     ownerNumber.textContent = ownerNum;
-    certOwner.textContent = name;
+    certOwner.textContent = result.name;
     certNumber.textContent = '#' + ownerNum;
     certDate.textContent = today;
 
-    // Show confirmation
     setTimeout(() => {
       confirmationModal.classList.add('show');
       confirmationOverlay.classList.add('show');
       document.body.style.overflow = 'hidden';
-
-      // Confetti
       createConfetti();
-
-      // Clear cart
       items = [];
       updateCartUI();
     }, 600);
+
+    document.querySelector('.checkout-form .form-input').value = '';
   }
 
   function createConfetti() {
     const container = document.getElementById('confettiContainer');
     container.innerHTML = '';
     const colors = ['#C62828', '#D4A843', '#ffffff', '#E53935', '#F0D080'];
-
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 100; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
       piece.style.left = Math.random() * 100 + '%';
@@ -340,14 +366,44 @@ const CART = (() => {
 
   function downloadCertificate() {
     const cert = document.getElementById('certificate');
-    html2canvas(cert).then(canvas => {
+    if (!cert) return;
+
+    showNotification('Certificate ready', 'Your certificate of authenticity has been generated');
+
+    const certData = {
+      owner: certOwner.textContent,
+      number: certNumber.textContent,
+      product: 'The Original Brick',
+      date: certDate.textContent,
+    };
+
+    try {
+      const blob = new Blob([
+        'BRICK — Certificate of Authenticity\n',
+        'Owner: ' + certData.owner + '\n',
+        'Number: ' + certData.number + '\n',
+        'Product: ' + certData.product + '\n',
+        'Date: ' + certData.date + '\n',
+        '\n' + 'The world has enough ordinary things.'
+      ], { type: 'text/plain' });
       const link = document.createElement('a');
-      link.download = 'BRICK-Certificate-' + certNumber.textContent + '.png';
-      link.href = canvas.toDataURL('image/png');
+      link.download = 'BRICK-Certificate-' + certData.number + '.txt';
+      link.href = URL.createObjectURL(blob);
       link.click();
-    }).catch(() => {
-      showNotification('Certificate saved', 'Your certificate has been generated');
-    });
+      URL.revokeObjectURL(link.href);
+    } catch (e) {
+      // Silent fallback
+    }
+
+    // Also try canvas approach
+    if (typeof html2canvas !== 'undefined') {
+      html2canvas(cert).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'BRICK-Certificate-' + certNumber.textContent + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(() => {});
+    }
   }
 
   function showNotification(title, message) {
@@ -356,27 +412,21 @@ const CART = (() => {
 
     const toast = document.createElement('div');
     toast.className = 'notification-toast';
+    toast.setAttribute('role', 'alert');
     toast.innerHTML = `
-      <div class="toast-icon"><i class="fa-solid fa-check-circle"></i></div>
+      <div class="toast-icon"><i class="fa-solid fa-check-circle" style="color:#4CAF50"></i></div>
       <div class="toast-content">
-        <span class="toast-title">${title}</span>
-        ${message ? `<span class="toast-message">${message}</span>` : ''}
+        <span class="toast-title" style="display:block;font-weight:500">${escapeHtml(title)}</span>
+        ${message ? `<span class="toast-message" style="display:block;font-size:12px;color:rgba(255,255,255,0.6)">${escapeHtml(message)}</span>` : ''}
       </div>
     `;
     toast.style.cssText = `
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
+      position: fixed; bottom: 30px; left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: #1a1a1a;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 10000;
-      opacity: 0;
+      background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 16px 24px;
+      display: flex; align-items: center; gap: 12px;
+      z-index: 10000; opacity: 0;
       transition: all 0.4s ease;
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);

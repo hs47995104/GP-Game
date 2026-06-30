@@ -3,178 +3,128 @@
    ============================================= */
 
 const THREE_BRICK = (() => {
-  let scene, camera, renderer, brick, brickGroup;
+  let scene, camera, renderer, brickGroup;
   let mouseX = 0, mouseY = 0;
   let targetRotX = 0, targetRotY = 0;
   let isAutoRotate = true;
   let animationId = null;
-
-  // Quality settings
-  const quality = {
-    segments: 32,
-    shadows: true,
-    antialias: true,
-  };
+  let isVisible = true;
+  let resizeObserver = null;
 
   function init(containerId) {
+    if (typeof THREE === 'undefined') {
+      console.warn('Three.js not loaded — skipping 3D brick');
+      return;
+    }
     const container = document.getElementById(containerId);
     if (!container) return;
 
     const width = container.clientWidth;
     const height = container.clientHeight;
+    if (width === 0 || height === 0) return;
 
-    // Scene
     scene = new THREE.Scene();
 
-    // Camera
     camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 0.5, 5);
-    camera.lookAt(0, 0, 0);
 
-    // Renderer
     renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: quality.antialias,
+      antialias: true,
       powerPreference: "high-performance",
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = quality.shadows;
+    renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.0;
     container.appendChild(renderer.domElement);
 
-    // Lights
     setupLights();
-
-    // Brick
     createBrick();
-
-    // Floor shadow
     createFloor();
-
-    // Particles background
     createParticles();
 
-    // Mouse events
     container.addEventListener('mousemove', onMouseMove);
     container.addEventListener('touchmove', onTouchMove, { passive: true });
 
-    // Resize
-    const resizeObserver = new ResizeObserver(() => onResize(containerId));
+    resizeObserver = new ResizeObserver(() => onResize(container));
     resizeObserver.observe(container);
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     animate();
   }
 
   function setupLights() {
-    // Ambient
-    const ambient = new THREE.AmbientLight(0x404060, 0.4);
+    const ambient = new THREE.AmbientLight(0x404060, 0.3);
     scene.add(ambient);
 
-    // Key light (warm)
-    const keyLight = new THREE.DirectionalLight(0xffeedd, 2.0);
-    keyLight.position.set(2, 3, 4);
+    const keyLight = new THREE.DirectionalLight(0xffeedd, 2.5);
+    keyLight.position.set(3, 4, 5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
     keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.camera.near = 0.1;
-    keyLight.shadow.camera.far = 10;
     scene.add(keyLight);
 
-    // Fill light (cool)
-    const fillLight = new THREE.DirectionalLight(0x4466ff, 0.5);
-    fillLight.position.set(-2, 1, -3);
+    const fillLight = new THREE.DirectionalLight(0x4466ff, 0.4);
+    fillLight.position.set(-3, 1, -4);
     scene.add(fillLight);
 
-    // Rim light
-    const rimLight = new THREE.DirectionalLight(0xff8866, 0.8);
-    rimLight.position.set(-1, 2, -2);
+    const rimLight = new THREE.DirectionalLight(0xff8866, 0.6);
+    rimLight.position.set(-2, 3, -3);
     scene.add(rimLight);
 
-    // Point light for dramatic effect
-    const pointLight = new THREE.PointLight(0xff4400, 0.3, 8);
-    pointLight.position.set(0, 1, 2);
-    scene.add(pointLight);
+    const accentLight = new THREE.PointLight(0xff4400, 0.4, 6);
+    accentLight.position.set(0, 1.5, 2);
+    scene.add(accentLight);
   }
 
   function createBrick() {
     brickGroup = new THREE.Group();
 
-    // Main brick body
-    const geo = new THREE.BoxGeometry(1.6, 0.8, 0.8, quality.segments, quality.segments, quality.segments);
-
-    // Add subtle surface deformation for realism
+    const geo = new THREE.BoxGeometry(1.6, 0.8, 0.8, 24, 24, 24);
     const pos = geo.attributes.position;
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
-      const z = pos.getZ(i);
-      // Slight noise for imperfect surface
-      const noise = (Math.random() - 0.5) * 0.015;
-      pos.setXYZ(i, x, y + noise * 2, z + noise);
+      const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+      const noise = (Math.random() - 0.5) * 0.018;
+      pos.setXYZ(i, x + noise * 0.3, y + noise * 1.5, z + noise);
     }
     geo.computeVertexNormals();
 
-    // Main material
     const mat = new THREE.MeshPhysicalMaterial({
       color: 0x8B4513,
-      roughness: 0.85,
-      metalness: 0.02,
-      clearcoat: 0.05,
-      clearcoatRoughness: 0.8,
-      reflectivity: 0.1,
-      envMapIntensity: 0.3,
+      roughness: 0.82,
+      metalness: 0.01,
+      clearcoat: 0.08,
+      clearcoatRoughness: 0.7,
+      reflectivity: 0.15,
+      envMapIntensity: 0.4,
     });
 
-    brick = new THREE.Mesh(geo, mat);
+    const brick = new THREE.Mesh(geo, mat);
     brick.castShadow = true;
     brick.receiveShadow = true;
     brick.position.y = -0.2;
     brickGroup.add(brick);
 
-    // Surface details - small bumps/dots
-    const detailMat = new THREE.MeshPhysicalMaterial({
-      color: 0x7A3B10,
-      roughness: 0.9,
-      metalness: 0.0,
-    });
-
-    // Add subtle edge highlights
-    const edgeGeo = new THREE.EdgesGeometry(geo);
+    const edgeGeo = new THREE.EdgesGeometry(
+      new THREE.BoxGeometry(1.6, 0.8, 0.8)
+    );
     const edgeMat = new THREE.LineBasicMaterial({
-      color: 0x5D3A1A,
-      transparent: true,
-      opacity: 0.3,
+      color: 0x5D3A1A, transparent: true, opacity: 0.2,
     });
     const edges = new THREE.LineSegments(edgeGeo, edgeMat);
-    brick.add(edges);
+    edges.position.y = -0.2;
+    brickGroup.add(edges);
 
     scene.add(brickGroup);
-
-    // Add a subtle glow
-    const glowGeo = new THREE.BoxGeometry(1.7, 0.9, 0.9);
-    const glowMat = new THREE.MeshPhysicalMaterial({
-      color: 0xff4400,
-      transparent: true,
-      opacity: 0.03,
-      emissive: 0xff2200,
-      emissiveIntensity: 0.1,
-      roughness: 0.5,
-      metalness: 0.0,
-      side: THREE.BackSide,
-    });
-    const glow = new THREE.Mesh(glowGeo, glowMat);
-    glow.position.y = -0.2;
-    brickGroup.add(glow);
   }
 
   function createFloor() {
     const geo = new THREE.PlaneGeometry(6, 4);
-    const mat = new THREE.ShadowMaterial({
-      opacity: 0.4,
-    });
+    const mat = new THREE.ShadowMaterial({ opacity: 0.35 });
     const floor = new THREE.Mesh(geo, mat);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -0.65;
@@ -183,30 +133,20 @@ const THREE_BRICK = (() => {
   }
 
   function createParticles() {
-    const count = 200;
+    const count = 150;
     const positions = new Float32Array(count * 3);
-    const sizes = new Float32Array(count);
-
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 12;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 2;
-      sizes[i] = Math.random() * 0.02 + 0.01;
     }
-
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
     const mat = new THREE.PointsMaterial({
-      color: 0xD4A843,
-      size: 0.03,
-      transparent: true,
-      opacity: 0.4,
-      blending: THREE.AdditiveBlending,
+      color: 0xD4A843, size: 0.025, transparent: true,
+      opacity: 0.3, blending: THREE.AdditiveBlending,
       sizeAttenuation: true,
     });
-
     const particles = new THREE.Points(geo, mat);
     scene.add(particles);
   }
@@ -216,11 +156,8 @@ const THREE_BRICK = (() => {
     mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouseY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     isAutoRotate = false;
-    // Reset auto-rotate after idle
     clearTimeout(window._rotateTimeout);
-    window._rotateTimeout = setTimeout(() => {
-      isAutoRotate = true;
-    }, 3000);
+    window._rotateTimeout = setTimeout(() => { isAutoRotate = true; }, 3000);
   }
 
   function onTouchMove(e) {
@@ -231,50 +168,51 @@ const THREE_BRICK = (() => {
     mouseY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
     isAutoRotate = false;
     clearTimeout(window._rotateTimeout);
-    window._rotateTimeout = setTimeout(() => {
-      isAutoRotate = true;
-    }, 3000);
+    window._rotateTimeout = setTimeout(() => { isAutoRotate = true; }, 3000);
   }
 
-  function onResize(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container || !renderer || !camera) return;
+  function onVisibilityChange() {
+    isVisible = !document.hidden;
+    if (isVisible && animationId === null) animate();
+    if (!isVisible && animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  function onResize(container) {
+    if (!renderer || !camera) return;
     const width = container.clientWidth;
     const height = container.clientHeight;
+    if (width === 0 || height === 0) return;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
   }
 
-  function animate() {
+  function animate(time) {
+    if (!isVisible) { animationId = null; return; }
     if (!brickGroup) return;
     animationId = requestAnimationFrame(animate);
 
-    // Smooth rotation
     if (isAutoRotate) {
-      targetRotY += 0.003;
-      targetRotX = Math.sin(Date.now() * 0.0003) * 0.1;
+      targetRotY += 0.002;
+      targetRotX = Math.sin((time || 0) * 0.0003) * 0.08;
     } else {
-      targetRotY += (mouseX * 0.5 - targetRotY) * 0.02;
-      targetRotX += (mouseY * 0.3 - targetRotX) * 0.02;
+      targetRotY += (mouseX * 0.4 - targetRotY) * 0.015;
+      targetRotX += (mouseY * 0.25 - targetRotX) * 0.015;
     }
-
     brickGroup.rotation.y = targetRotY;
     brickGroup.rotation.x = targetRotX;
-
-    // Subtle floating
-    brickGroup.position.y = Math.sin(Date.now() * 0.001) * 0.04;
-
+    brickGroup.position.y = Math.sin((time || 0) * 0.001) * 0.03;
     renderer.render(scene, camera);
   }
 
   function destroy() {
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-    }
-    if (renderer) {
-      renderer.dispose();
-    }
+    if (animationId) cancelAnimationFrame(animationId);
+    if (resizeObserver) resizeObserver.disconnect();
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    if (renderer) renderer.dispose();
     if (scene) {
       scene.traverse((child) => {
         if (child.isMesh) {
