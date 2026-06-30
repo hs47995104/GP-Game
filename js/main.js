@@ -202,75 +202,178 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // STORY — Interactive Carousel
+  // STORY — Cinematic Scroll Chapters (GSAP)
   // ============================================
-  const storyItems = document.querySelectorAll('.story-item');
-  const storyDots = document.getElementById('storyDots');
-  const storyPrev = document.querySelector('.story-prev');
-  const storyNext = document.querySelector('.story-next');
-  const storyCarousel = document.querySelector('.story-carousel');
-  let currentStory = 0;
+  const chapters = document.querySelectorAll('.story-chapter');
+  const chapterParticles = document.getElementById('ch2Particles');
 
-  storyItems.forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'story-dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', `Story ${i + 1}`);
-    dot.addEventListener('click', () => goToStory(i));
-    storyDots.appendChild(dot);
+  // Chapter 1: Before the Brick — text + particle + brick emergence
+  const ch1Texts = document.querySelectorAll('.ch1-text');
+  const ch1Particles = document.querySelectorAll('.ch1-particle-container');
+  const ch1Brick = document.querySelector('.ch1-brick-emerge');
+
+  ScrollTrigger.create({
+    trigger: '#chapter1',
+    start: 'top 30%',
+    end: 'bottom 70%',
+    onEnter: () => {
+      gsap.to(ch1Texts, { y: 0, opacity: 1, duration: 1.2, stagger: 0.4, ease: 'power3.out' });
+      gsap.to(ch1Particles, { opacity: 1, duration: 1.5, delay: 1.5, ease: 'power2.out' });
+      gsap.to(ch1Brick, { scale: 1, opacity: 1, duration: 1.5, delay: 2.5, ease: 'back.out(1.7)' });
+    },
+    onLeaveBack: () => {
+      gsap.set(ch1Texts, { y: 20, opacity: 0 });
+      gsap.set(ch1Particles, { opacity: 0 });
+      gsap.set(ch1Brick, { scale: 0.3, opacity: 0 });
+    },
   });
 
-  function goToStory(index) {
-    if (index === currentStory && storyItems[currentStory]?.classList.contains('active')) return;
-    storyItems.forEach((item, i) => {
-      item.classList.toggle('active', i === index);
-    });
-    storyDots.querySelectorAll('.story-dot').forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-    currentStory = index;
-  }
+  // Chapter 2: Born from the Earth — particles + text reveal
+  const ch2Lines = document.querySelectorAll('.ch2-line');
+  const ch2BrickCore = document.querySelector('.ch2-brick-core');
+  const ch2BrickGlow = document.querySelector('.ch2-brick-glow');
 
-  storyPrev.addEventListener('click', () => goToStory(Math.max(0, currentStory - 1)));
-  storyNext.addEventListener('click', () => goToStory(Math.min(storyItems.length - 1, currentStory + 1)));
-
-  // Clay particles
-  const clayContainer = document.getElementById('clayParticles');
-  if (clayContainer) {
-    for (let i = 0; i < 30; i++) {
+  // Create floating particles for ch2
+  if (chapterParticles) {
+    for (let i = 0; i < 40; i++) {
       const p = document.createElement('div');
-      p.className = 'clay-particle';
+      p.className = 'ch2-particle';
       p.style.left = Math.random() * 100 + '%';
       p.style.top = Math.random() * 100 + '%';
-      p.style.animationDelay = (Math.random() * 3) + 's';
-      p.style.animation = `floatParticle ${Math.random() * 4 + 3}s ease-in-out infinite`;
-      clayContainer.appendChild(p);
+      p.style.animationDelay = (Math.random() * 4) + 's';
+      chapterParticles.appendChild(p);
     }
   }
 
-  // Fire particles
-  const fireContainer = document.getElementById('fireContainer');
-  if (fireContainer) {
-    for (let i = 0; i < 15; i++) {
-      const f = document.createElement('div');
-      f.className = 'fire-particle';
-      f.style.left = (Math.random() * 80 + 10) + '%';
-      f.style.height = (Math.random() * 60 + 30) + 'px';
-      f.style.animationDuration = (Math.random() * 0.5 + 1) + 's';
-      f.style.animationDelay = (Math.random() * 2) + 's';
-      fireContainer.appendChild(f);
+  ScrollTrigger.create({
+    trigger: '#chapter2',
+    start: 'top 30%',
+    end: 'bottom 70%',
+    onEnter: () => {
+      gsap.to(ch2Lines, { y: 0, opacity: 1, duration: 1.2, stagger: 0.5, ease: 'power3.out' });
+      gsap.to(ch2BrickCore, { scale: 1, opacity: 1, duration: 1.2, delay: 2, ease: 'back.out(2)' });
+      gsap.to(ch2BrickGlow, { opacity: 1, duration: 1.5, delay: 2.2, ease: 'power2.out' });
+      // Animate particles
+      gsap.to('.ch2-particle', {
+        opacity: 0.6, duration: 1.5, stagger: 0.02, ease: 'power2.out', delay: 0.5,
+      });
+    },
+    onLeaveBack: () => {
+      gsap.set(ch2Lines, { y: 30, opacity: 0 });
+      gsap.set(ch2BrickCore, { scale: 0.5, opacity: 0 });
+      gsap.set(ch2BrickGlow, { opacity: 0 });
+      gsap.set('.ch2-particle', { opacity: 0 });
+    },
+  });
+
+  // Chapter 3: Time — year timeline + brick constant
+  const ch3Years = document.querySelectorAll('.ch3-year');
+  const ch3Brick = document.querySelector('.ch3-brick-constant');
+  const ch3Message = document.querySelector('.ch3-message');
+
+  ScrollTrigger.create({
+    trigger: '#chapter3',
+    start: 'top 30%',
+    end: 'bottom 70%',
+    onEnter: () => {
+      gsap.to(ch3Years, { y: 0, opacity: 1, duration: 0.8, stagger: 0.3, ease: 'power3.out' });
+      gsap.to(ch3Years, { color: '#D4A843', duration: 0.3, stagger: 0.3, delay: 0.6, ease: 'power2.in' });
+      gsap.to(ch3Brick, { opacity: 1, duration: 1, delay: 1.8, ease: 'power2.out' });
+      gsap.to(ch3Message, { opacity: 1, duration: 1.2, delay: 2.5, ease: 'power2.out' });
+    },
+    onLeaveBack: () => {
+      gsap.set(ch3Years, { y: 20, opacity: 0, color: '#555' });
+      gsap.set(ch3Brick, { opacity: 0 });
+      gsap.set(ch3Message, { opacity: 0 });
+    },
+  });
+
+  // Chapter 4: The Test — items reveal then drop off
+  const ch4Headline = document.querySelector('.ch4-headline');
+  const ch4Items = document.querySelectorAll('.ch4-item');
+  const ch4Msgs = document.querySelectorAll('.ch4-msg');
+
+  ScrollTrigger.create({
+    trigger: '#chapter4',
+    start: 'top 20%',
+    end: 'bottom 50%',
+    onEnter: () => {
+      gsap.to(ch4Headline, { opacity: 1, duration: 1, ease: 'power3.out' });
+      gsap.to(ch4Items, { y: 0, opacity: 1, duration: 0.6, stagger: 0.15, delay: 0.5, ease: 'power3.out' });
+      // After items show, fade some out (brick survives)
+      gsap.to(ch4Items, {
+        opacity: 0, y: 20, scale: 0.9, duration: 0.8, stagger: 0.2, delay: 3, ease: 'power2.in',
+      });
+      gsap.to('.ch4-item-brick', {
+        opacity: 1, y: 0, scale: 1, duration: 0.8, delay: 3, ease: 'back.out(2)',
+      });
+      gsap.to(ch4Msgs, { opacity: 1, y: 0, duration: 0.8, stagger: 0.3, delay: 4, ease: 'power3.out' });
+    },
+    onLeaveBack: () => {
+      gsap.set(ch4Headline, { opacity: 0 });
+      gsap.set(ch4Items, { y: 20, opacity: 0, scale: 1 });
+      gsap.set(ch4Msgs, { y: 10, opacity: 0 });
+    },
+  });
+
+  // Chapter 5: The Legacy — wall of bricks + reveal
+  const ch5Wall = document.getElementById('ch5BrickWall');
+  let ch5WallBricks = [];
+
+  if (ch5Wall) {
+    for (let i = 0; i < 60; i++) {
+      const brick = document.createElement('div');
+      brick.className = 'ch5-wall-brick';
+      ch5Wall.appendChild(brick);
+      ch5WallBricks.push(brick);
     }
   }
 
-  // Craft grid
-  const craftGrid = document.querySelector('.craft-grid');
-  if (craftGrid) {
-    for (let i = 0; i < 16; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'craft-cell';
-      cell.style.animationDelay = (Math.random() * 2) + 's';
-      craftGrid.appendChild(cell);
-    }
+  const ch5Reveal = document.querySelector('.ch5-reveal');
+
+  ScrollTrigger.create({
+    trigger: '#chapter5',
+    start: 'top 30%',
+    end: 'bottom 70%',
+    onEnter: () => {
+      gsap.to(ch5WallBricks, { opacity: 1, duration: 0.3, stagger: 0.005, ease: 'power2.out' });
+      gsap.to(ch5Reveal, { scale: 1, opacity: 1, duration: 1.5, delay: 1.5, ease: 'elastic.out(1, 0.5)' });
+    },
+    onLeaveBack: () => {
+      gsap.set(ch5WallBricks, { opacity: 0 });
+      gsap.set(ch5Reveal, { scale: 0.8, opacity: 0 });
+    },
+  });
+
+  // Chapter 3: Skyline buildings
+  const ch3Skyline = document.getElementById('ch3Skyline');
+  if (ch3Skyline) {
+    const buildingHeights = [100, 140, 80, 180, 120, 90, 160, 110, 70, 200, 130, 95, 150, 85, 170, 100, 140, 120, 90, 160];
+    const buildingWidths = [30, 25, 35, 20, 28, 32, 22, 26, 38, 18, 30, 24, 28, 34, 20, 30, 25, 22, 35, 28];
+    buildingHeights.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'ch3-building';
+      b.style.height = h + 'px';
+      b.style.width = (buildingWidths[i] || 26) + 'px';
+      b.style.left = (i * 5) + '%';
+      ch3Skyline.appendChild(b);
+    });
   }
+
+  // Chapter parallax background shifts
+  chapters.forEach((chapter) => {
+    const bg = chapter.querySelector('.chapter-bg');
+    if (!bg) return;
+    ScrollTrigger.create({
+      trigger: chapter,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        const progress = self.progress;
+        gsap.set(bg, { scale: 1 + progress * 0.02 });
+      },
+    });
+  });
 
   // ============================================
   // GSAP + SCROLLTRIGGER — Cinematic Animations
@@ -284,15 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .from('.hero-subtitle', { y: 40, opacity: 0, duration: 1 }, '-=0.4')
     .from('.hero-actions .btn', { y: 30, opacity: 0, stagger: 0.2, duration: 0.8 }, '-=0.4')
     .from('.hero-scroll-indicator', { opacity: 0, duration: 1 }, '-=0.2');
-
-  // Story section — scroll-based navigation
-  gsap.utils.toArray('.story-item').forEach((item, i) => {
-    ScrollTrigger.create({
-      trigger: item,
-      start: 'top center',
-      onEnter: () => goToStory(i),
-    });
-  });
 
   // Features — staggered reveal (one-time)
   gsap.utils.toArray('.feature-card').forEach((card) => {
@@ -311,14 +405,12 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.set(card, { y: 40, opacity: 0 });
   });
 
-  // Showcase
+  // Explore
   ScrollTrigger.create({
-    trigger: '.showcase', start: 'top 70%', once: true,
+    trigger: '.explore', start: 'top 70%', once: true,
     onEnter: () => {
-      gsap.from('.showcase-viewer', { scale: 0.9, opacity: 0, duration: 1, ease: 'power3.out' });
-      gsap.from('.spec-item', {
-        x: 30, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out', delay: 0.3,
-      });
+      gsap.from('.explore-tabs', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' });
+      gsap.from('.explore-panel.active', { y: 30, opacity: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' });
     },
   });
 
@@ -433,63 +525,222 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // SHOWCASE — Interactive 3D Overlay
+  // EXPLORE — Tab Panels
   // ============================================
-  const showcaseCanvas = document.getElementById('showcaseCanvas');
-  if (showcaseCanvas) {
-    let isRotating = false;
-    let rotX = 0, rotY = 0;
-    let zoom = 1;
+  const exploreTabs = document.querySelectorAll('.explore-tab');
+  const explorePanels = document.querySelectorAll('.explore-panel');
 
-    const showcaseViewer = showcaseCanvas.closest('.showcase-viewer');
-    if (showcaseViewer) {
-      showcaseViewer.addEventListener('mousemove', (e) => {
-        if (!isRotating) return;
-        const rect = showcaseViewer.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-        rotY = (x - 0.5) * 30;
-        rotX = (0.5 - y) * 20;
-        applyShowcaseTransform();
+  exploreTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.panel;
+      exploreTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      explorePanels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      const panel = document.getElementById(`panel-${target}`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // ============================================
+  // EXPLORE — 360° Brick Display (CSS 3D)
+  // ============================================
+  const sbdBrick = document.getElementById('sbdBrick');
+  const rotateToggle = document.getElementById('rotateToggle');
+  const resetViewBtn = document.getElementById('resetView');
+  const zoomInBtn = document.getElementById('zoomIn');
+  const zoomOutBtn = document.getElementById('zoomOut');
+  const zoomLevelSpan = document.getElementById('zoomLevel');
+
+  if (sbdBrick) {
+    let isRotating = true;
+    let rotX = -15, rotY = 25;
+    let zoom = 1;
+    let autoRotateInterval;
+
+    function applyBrickTransform() {
+      sbdBrick.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${zoom})`;
+    }
+
+    function startAutoRotate() {
+      stopAutoRotate();
+      autoRotateInterval = setInterval(() => {
+        rotY += 0.3;
+        applyBrickTransform();
+      }, 16);
+    }
+
+    function stopAutoRotate() {
+      if (autoRotateInterval) {
+        clearInterval(autoRotateInterval);
+        autoRotateInterval = null;
+      }
+    }
+
+    startAutoRotate();
+
+    if (rotateToggle) {
+      rotateToggle.addEventListener('click', function () {
+        isRotating = !isRotating;
+        this.classList.toggle('active');
+        if (isRotating) {
+          startAutoRotate();
+        } else {
+          stopAutoRotate();
+        }
       });
     }
 
-    function applyShowcaseTransform() {
-      showcaseCanvas.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${zoom})`;
+    if (resetViewBtn) {
+      resetViewBtn.addEventListener('click', () => {
+        rotX = -15;
+        rotY = 25;
+        zoom = 1;
+        isRotating = true;
+        if (rotateToggle) rotateToggle.classList.remove('active');
+        if (zoomLevelSpan) zoomLevelSpan.textContent = '1.0';
+        applyBrickTransform();
+        startAutoRotate();
+      });
     }
 
-    document.getElementById('rotateToggle').addEventListener('click', function () {
-      isRotating = !isRotating;
-      this.classList.toggle('active');
-      if (!isRotating) {
-        rotX = 0;
-        rotY = 0;
-        applyShowcaseTransform();
-      }
-    });
+    if (zoomInBtn && zoomOutBtn && zoomLevelSpan) {
+      zoomInBtn.addEventListener('click', () => {
+        zoom = Math.min(2, +(zoom + 0.1).toFixed(1));
+        zoomLevelSpan.textContent = zoom.toFixed(1);
+        applyBrickTransform();
+      });
+      zoomOutBtn.addEventListener('click', () => {
+        zoom = Math.max(0.5, +(zoom - 0.1).toFixed(1));
+        zoomLevelSpan.textContent = zoom.toFixed(1);
+        applyBrickTransform();
+      });
+    }
 
-    document.getElementById('resetView').addEventListener('click', () => {
-      rotX = 0;
-      rotY = 0;
-      zoom = 1;
-      isRotating = false;
-      document.getElementById('rotateToggle').classList.remove('active');
-      document.getElementById('zoomLevel').textContent = '1.0';
-      applyShowcaseTransform();
-    });
-
-    document.getElementById('zoomIn').addEventListener('click', () => {
-      zoom = Math.min(2, +(zoom + 0.1).toFixed(1));
-      document.getElementById('zoomLevel').textContent = zoom.toFixed(1);
-      applyShowcaseTransform();
-    });
-
-    document.getElementById('zoomOut').addEventListener('click', () => {
-      zoom = Math.max(0.5, +(zoom - 0.1).toFixed(1));
-      document.getElementById('zoomLevel').textContent = zoom.toFixed(1);
-      applyShowcaseTransform();
+    // Hotspot hover effect
+    document.querySelectorAll('.hotspot').forEach(hs => {
+      hs.addEventListener('mouseenter', () => {
+        stopAutoRotate();
+      });
+      hs.addEventListener('mouseleave', () => {
+        if (isRotating) startAutoRotate();
+      });
     });
   }
+
+  // ============================================
+  // EXPLORE — X-Ray Cutaway Toggle
+  // ============================================
+  const xrayToggle = document.getElementById('xrayToggle');
+  const xrayCutaway = document.getElementById('xrayCutaway');
+  const xrayToggleText = document.getElementById('xrayToggleText');
+
+  if (xrayToggle && xrayCutaway) {
+    xrayToggle.addEventListener('click', () => {
+      const isOpen = xrayCutaway.classList.toggle('open');
+      xrayToggleText.textContent = isOpen ? 'Hide Cutaway' : 'Show Cutaway';
+      xrayToggle.classList.toggle('active');
+    });
+  }
+
+  // ============================================
+  // EXPLORE — Build Mode
+  // ============================================
+  const buildGrid = document.getElementById('buildGrid');
+  const buildCount = document.getElementById('buildCount');
+  const buildAddBtn = document.getElementById('buildAddBtn');
+  const buildClearBtn = document.getElementById('buildClearBtn');
+  const buildStageFill = document.getElementById('buildStageFill');
+  const buildStageText = document.getElementById('buildStageText');
+  let bricksPlaced = 0;
+
+  function updateBuildUI() {
+    if (buildCount) buildCount.textContent = bricksPlaced;
+    if (buildStageFill) {
+      const pct = Math.min((bricksPlaced / 24) * 100, 100);
+      buildStageFill.style.width = pct + '%';
+    }
+    if (buildStageText) {
+      const stages = ['Place your first brick', 'Building a wall', 'Raising a house', 'Constructing a castle', 'Creating a skyline'];
+      const idx = Math.min(Math.floor(bricksPlaced / 6), 4);
+      buildStageText.textContent = stages[idx];
+    }
+  }
+
+  if (buildGrid) {
+    for (let i = 0; i < 24; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'build-cell';
+      cell.addEventListener('click', () => {
+        if (cell.classList.contains('placed')) {
+          cell.classList.add('removing');
+          setTimeout(() => {
+            cell.classList.remove('placed', 'removing');
+            bricksPlaced = Math.max(0, bricksPlaced - 1);
+            updateBuildUI();
+          }, 300);
+        }
+      });
+      buildGrid.appendChild(cell);
+    }
+  }
+
+  if (buildAddBtn) {
+    buildAddBtn.addEventListener('click', () => {
+      const emptyCells = document.querySelectorAll('.build-cell:not(.placed)');
+      if (emptyCells.length > 0) {
+        const cell = emptyCells[0];
+        cell.classList.add('placed');
+        bricksPlaced++;
+        updateBuildUI();
+      }
+    });
+  }
+
+  if (buildClearBtn) {
+    buildClearBtn.addEventListener('click', () => {
+      document.querySelectorAll('.build-cell.placed').forEach(cell => {
+        cell.classList.add('removing');
+        setTimeout(() => cell.classList.remove('placed', 'removing'), 300);
+      });
+      bricksPlaced = 0;
+      setTimeout(updateBuildUI, 350);
+    });
+  }
+
+  // ============================================
+  // EXPLORE — Legacy Counter Animation
+  // ============================================
+  function animateLegacyCounter(el, target, duration = 2500) {
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(start + (target - start) * eased);
+      el.textContent = current.toLocaleString();
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  const legacyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.target);
+        if (!isNaN(target)) animateLegacyCounter(el, target);
+        legacyObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.legacy-number[data-target]').forEach(el => legacyObserver.observe(el));
 
   // ============================================
   // FAKE LIVE PURCHASES

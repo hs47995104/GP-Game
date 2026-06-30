@@ -74,7 +74,7 @@
 
       <div class="navbar-links" id="navLinks">
         <a href="#story" class="nav-link">Story</a>
-        <a href="#showcase" class="nav-link">Explore</a>
+        <a href="#explore" class="nav-link">Explore</a>
         <a href="#features" class="nav-link">Features</a>
         <a href="#game" class="nav-link">Prove</a>
         <a href="#product" class="nav-link">Purchase</a>
@@ -101,7 +101,7 @@
   <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
     <div class="mobile-menu-inner">
       <a href="#story" class="mobile-link" data-nav>Story</a>
-      <a href="#showcase" class="mobile-link" data-nav>Explore</a>
+      <a href="#explore" class="mobile-link" data-nav>Explore</a>
       <a href="#features" class="mobile-link" data-nav>Features</a>
       <a href="#game" class="mobile-link" data-nav>Prove</a>
       <a href="#product" class="mobile-link" data-nav>Purchase</a>
@@ -139,7 +139,7 @@
       </p>
 
       <div class="hero-actions">
-        <a href="#showcase" class="btn btn-primary" data-smooth>
+        <a href="#explore" class="btn btn-primary" data-smooth>
           <span class="btn-text">Explore</span>
           <i class="fa-solid fa-arrow-right"></i>
           <span class="btn-ripple"></span>
@@ -163,136 +163,144 @@
   </section>
 
   <!-- ============================================ -->
-  <!-- SECTION 2: STORYTELLING -->
+  <!-- SECTION 2: STORYTELLING — CINEMATIC SCROLL -->
   <!-- ============================================ -->
   <section id="story" class="section story" data-section>
-    <div class="story-bg-overlay"></div>
 
-    <div class="section-label">
-      <span class="label-line"></span>
-      <span class="label-text">The Making of a Legend</span>
+    <!-- CHAPTER 1: Before the Brick -->
+    <div class="story-chapter" id="chapter1">
+      <div class="chapter-bg chapter-bg-dark"></div>
+      <div class="chapter-content chapter-1-content">
+        <p class="ch1-text" id="ch1Text">The world is full of ordinary objects.</p>
+        <div class="ch1-particle-container" id="ch1Particles">
+          <div class="ch1-glowing-particle" id="ch1GlowParticle"></div>
+        </div>
+        <div class="ch1-brick-emerge" id="ch1BrickEmerge">
+          <div class="emerge-brick"></div>
+        </div>
+      </div>
     </div>
 
-    <h2 class="section-title">
-      <span class="title-reveal">Born from</span>
-      <span class="title-reveal accent">Ancient Clay</span>
-    </h2>
-
-    <div class="story-carousel">
-      <div class="story-item" data-index="0">
-        <div class="story-visual">
-          <div class="story-visual-inner clay-visual">
-            <div class="particle-cluster" id="clayParticles"></div>
-          </div>
+    <!-- CHAPTER 2: Born from the Earth -->
+    <div class="story-chapter" id="chapter2">
+      <div class="chapter-bg chapter-bg-earth"></div>
+      <div class="chapter-particles-2" id="ch2Particles"></div>
+      <div class="chapter-content chapter-2-content">
+        <div class="ch2-captions" id="ch2Captions">
+          <span class="ch2-line" data-line="0">Ancient clay.</span>
+          <span class="ch2-line" data-line="1">Relentless pressure.</span>
+          <span class="ch2-line" data-line="2">Unforgiving fire.</span>
+          <span class="ch2-line" data-line="3">A timeless form.</span>
         </div>
-        <div class="story-text">
-          <span class="story-era">c. 7,000 BC</span>
-          <h3 class="story-heading">Born from Ancient Clay</h3>
-          <p class="story-desc">
-            Before civilizations rose, the earth held a secret. Molded by rivers and tempered by sun, the first clay was pulled from the earth by hands that understood patience.
-          </p>
-          <div class="story-stat">
-            <span class="stat-number" data-count="7000">0</span>
-            <span class="stat-label">Years of Heritage</span>
-          </div>
+        <div class="ch2-brick-visual" id="ch2BrickVisual">
+          <div class="ch2-brick-core"></div>
+          <div class="ch2-brick-glow"></div>
         </div>
       </div>
+    </div>
 
-      <div class="story-item" data-index="1">
-        <div class="story-visual">
-          <div class="story-visual-inner fire-visual">
-            <div class="fire-container" id="fireContainer"></div>
-          </div>
+    <!-- CHAPTER 3: Time -->
+    <div class="story-chapter" id="chapter3">
+      <div class="chapter-bg chapter-bg-time"></div>
+      <div class="chapter-content chapter-3-content">
+        <div class="ch3-timeline" id="ch3Timeline">
+          <div class="ch3-year" data-year="100">100</div>
+          <div class="ch3-year" data-year="1000">1,000</div>
+          <div class="ch3-year" data-year="10000">10,000</div>
+          <div class="ch3-year" data-year="100000">100,000</div>
         </div>
-        <div class="story-text">
-          <span class="story-era">c. 3,500 BC</span>
-          <h3 class="story-heading">Forged by Fire</h3>
-          <p class="story-desc">
-            Kilns roared to life, transforming mud into monument. At 1,000°C, clay undergoes an irreversible metamorphosis. It becomes unbreakable. It becomes eternal.
-          </p>
-          <div class="story-stat">
-            <span class="stat-number" data-count="1000">0</span>
-            <span class="stat-label">Degrees Celsius</span>
-          </div>
+        <div class="ch3-brick-constant" id="ch3BrickConstant">
+          <div class="ch3-brick-icon"></div>
+          <span class="ch3-brick-label">Unchanged</span>
         </div>
+        <div class="ch3-backdrop" id="ch3Backdrop">
+          <div class="ch3-skyline" id="ch3Skyline"></div>
+          <div class="ch3-city" id="ch3City"></div>
+        </div>
+        <p class="ch3-message" id="ch3Message">It does not change. The world does.</p>
       </div>
+    </div>
 
-      <div class="story-item" data-index="2">
-        <div class="story-visual">
-          <div class="story-visual-inner craft-visual">
-            <div class="craft-grid"></div>
+    <!-- CHAPTER 4: The Test -->
+    <div class="story-chapter" id="chapter4">
+      <div class="chapter-bg chapter-bg-test"></div>
+      <div class="chapter-content chapter-4-content">
+        <h3 class="ch4-headline">The Test of Time</h3>
+        <div class="ch4-items" id="ch4Items">
+          <div class="ch4-item" data-product="smartphone">
+            <div class="ch4-item-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <span class="ch4-item-name">Smartphone</span>
+            <div class="ch4-item-lifespan">
+              <div class="lifespan-bar"><div class="lifespan-fill" style="width:5%"></div></div>
+              <span class="lifespan-text">3-5 years</span>
+            </div>
           </div>
-        </div>
-        <div class="story-text">
-          <span class="story-era">Present Day</span>
-          <h3 class="story-heading">Perfected by Craftsmanship</h3>
-          <p class="story-desc">
-            Each brick is hand-selected. Inspected. Measured. Only one in every ten thousand meets our standard. The rest are returned to the earth.
-          </p>
-          <div class="story-stat">
-            <span class="stat-number" data-count="99.99">0</span>
-            <span class="stat-label">Purity Standard</span>
+          <div class="ch4-item" data-product="laptop">
+            <div class="ch4-item-icon"><i class="fa-solid fa-laptop"></i></div>
+            <span class="ch4-item-name">Laptop</span>
+            <div class="ch4-item-lifespan">
+              <div class="lifespan-bar"><div class="lifespan-fill" style="width:10%"></div></div>
+              <span class="lifespan-text">5-8 years</span>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="story-item" data-index="3">
-        <div class="story-visual">
-          <div class="story-visual-inner legacy-visual">
-            <div class="legacy-ring"></div>
+          <div class="ch4-item" data-product="watch">
+            <div class="ch4-item-icon"><i class="fa-regular fa-clock"></i></div>
+            <span class="ch4-item-name">Luxury Watch</span>
+            <div class="ch4-item-lifespan">
+              <div class="lifespan-bar"><div class="lifespan-fill" style="width:20%"></div></div>
+              <span class="lifespan-text">20-30 years</span>
+            </div>
           </div>
-        </div>
-        <div class="story-text">
-          <span class="story-era">Forever</span>
-          <h3 class="story-heading">Built to Outlast Generations</h3>
-          <p class="story-desc">
-            While skyscrapers crumble and trends fade, the brick remains. It does not rust. It does not decay. It simply waits for the next civilization to find it.
-          </p>
-          <div class="story-stat">
-            <span class="stat-number" data-count="10000">0</span>
-            <span class="stat-label">Year Lifespan</span>
+          <div class="ch4-item" data-product="car">
+            <div class="ch4-item-icon"><i class="fa-solid fa-car"></i></div>
+            <span class="ch4-item-name">Sports Car</span>
+            <div class="ch4-item-lifespan">
+              <div class="lifespan-bar"><div class="lifespan-fill" style="width:15%"></div></div>
+              <span class="lifespan-text">10-20 years</span>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="story-item" data-index="4">
-        <div class="story-visual">
-          <div class="story-visual-inner exclusive-visual">
-            <div class="exclusive-badge-large">
-              <span class="exclusive-number">100</span>
-              <span class="exclusive-label">Owners</span>
+          <div class="ch4-item ch4-item-brick" data-product="brick">
+            <div class="ch4-item-icon"><i class="fa-solid fa-cube"></i></div>
+            <span class="ch4-item-name">The Brick</span>
+            <div class="ch4-item-lifespan">
+              <div class="lifespan-bar"><div class="lifespan-fill gold-fill" style="width:100%"></div></div>
+              <span class="lifespan-text">10,000+ years</span>
             </div>
           </div>
         </div>
-        <div class="story-text">
-          <span class="story-era">Now</span>
-          <h3 class="story-heading">Limited to 100 Owners</h3>
-          <p class="story-desc">
-            Not everyone will understand. Not everyone should. One hundred bricks. One hundred souls who refuse to own ordinary things.
-          </p>
-          <div class="story-stat">
-            <span class="stat-number" data-count="93" id="remainingCount">0</span>
-            <span class="stat-label">Already Claimed</span>
-          </div>
+        <div class="ch4-messages" id="ch4Messages">
+          <p class="ch4-msg" data-msg="0">Some things become obsolete.</p>
+          <p class="ch4-msg" data-msg="1">Some become history.</p>
+          <p class="ch4-msg accent" data-msg="2">One becomes eternal.</p>
         </div>
       </div>
     </div>
 
-    <div class="story-nav">
-      <button class="story-arrow story-prev" aria-label="Previous story">
-        <i class="fa-solid fa-arrow-left"></i>
-      </button>
-      <div class="story-dots" id="storyDots"></div>
-      <button class="story-arrow story-next" aria-label="Next story">
-        <i class="fa-solid fa-arrow-right"></i>
-      </button>
+    <!-- CHAPTER 5: The Legacy -->
+    <div class="story-chapter" id="chapter5">
+      <div class="chapter-bg chapter-bg-legacy"></div>
+      <div class="chapter-content chapter-5-content">
+        <div class="ch5-brick-wall" id="ch5BrickWall"></div>
+        <div class="ch5-reveal" id="ch5Reveal">
+          <div class="ch5-glowing-brick"><div class="ch5-brick-glow-inner"></div></div>
+          <div class="ch5-reveal-text">
+            <span class="ch5-line-1">This one</span>
+            <span class="ch5-line-2">could be yours.</span>
+          </div>
+          <a href="#product" class="btn btn-primary" data-smooth>
+            <span>Claim Your Legacy</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
     </div>
+
   </section>
 
   <!-- ============================================ -->
-  <!-- SECTION 3: 360 PRODUCT SHOWCASE -->
+  <!-- SECTION 3: EXPLORE — LUXURY EXHIBITION -->
   <!-- ============================================ -->
-  <section id="showcase" class="section showcase" data-section>
+  <section id="explore" class="section explore" data-section>
     <div class="section-label light">
       <span class="label-line"></span>
       <span class="label-text">Interactive Experience</span>
@@ -303,76 +311,230 @@
       <span class="title-reveal accent">Detail.</span>
     </h2>
 
-    <div class="showcase-layout">
-      <div class="showcase-viewer" id="showcaseViewer">
-        <div class="showcase-canvas" id="showcaseCanvas"></div>
+    <!-- Tabbed Navigation for Explore -->
+    <div class="explore-tabs" role="tablist">
+      <button class="explore-tab active" role="tab" data-panel="360" aria-selected="true">360° View</button>
+      <button class="explore-tab" role="tab" data-panel="xray" aria-selected="false">X-Ray</button>
+      <button class="explore-tab" role="tab" data-panel="build" aria-selected="false">Build</button>
+      <button class="explore-tab" role="tab" data-panel="legacy" aria-selected="false">Legacy</button>
+    </div>
 
-        <div class="showcase-controls">
-          <button class="showcase-btn" id="rotateToggle" aria-label="Toggle auto rotation">
-            <i class="fa-solid fa-rotate"></i>
-          </button>
-          <button class="showcase-btn" id="resetView" aria-label="Reset view">
-            <i class="fa-solid fa-expand"></i>
-          </button>
+    <!-- Panel 1: 360° Interactive Viewer -->
+    <div class="explore-panel active" id="panel-360" role="tabpanel">
+      <div class="showcase-layout">
+        <div class="showcase-viewer" id="showcaseViewer">
+          <div class="showcase-canvas" id="showcaseCanvas">
+            <div class="showcase-brick-display">
+              <div class="sbd-brick" id="sbdBrick">
+                <div class="sbd-face sbd-front"></div>
+                <div class="sbd-face sbd-back"></div>
+                <div class="sbd-face sbd-top"></div>
+                <div class="sbd-face sbd-bottom"></div>
+                <div class="sbd-face sbd-left"></div>
+                <div class="sbd-face sbd-right"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="showcase-controls">
+            <button class="showcase-btn" id="rotateToggle" aria-label="Toggle auto rotation">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+            <button class="showcase-btn" id="resetView" aria-label="Reset view">
+              <i class="fa-solid fa-expand"></i>
+            </button>
+          </div>
+
+          <div class="showcase-zoom">
+            <button class="zoom-btn" id="zoomIn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
+            <div class="zoom-level"><span id="zoomLevel">1.0</span>x</div>
+            <button class="zoom-btn" id="zoomOut" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
+          </div>
+
+          <div class="showcase-hotspots">
+            <div class="hotspot" style="top:22%;left:35%;" data-detail="material">
+              <span class="hotspot-dot"></span>
+              <div class="hotspot-info">
+                <strong>Material</strong>
+                <span>Premium fired clay, aged to perfection</span>
+              </div>
+            </div>
+            <div class="hotspot" style="top:55%;left:65%;" data-detail="craftsmanship">
+              <span class="hotspot-dot"></span>
+              <div class="hotspot-info">
+                <strong>Craftsmanship</strong>
+                <span>Hand-finished by master artisans</span>
+              </div>
+            </div>
+            <div class="hotspot" style="top:40%;left:45%;" data-detail="texture">
+              <span class="hotspot-dot"></span>
+              <div class="hotspot-info">
+                <strong>Texture</strong>
+                <span>Matte surface with natural variations</span>
+              </div>
+            </div>
+            <div class="hotspot" style="top:70%;left:30%;" data-detail="weight">
+              <span class="hotspot-dot"></span>
+              <div class="hotspot-info">
+                <strong>Weight</strong>
+                <span>2.3 kg — substantial yet portable</span>
+              </div>
+            </div>
+            <div class="hotspot" style="top:30%;left:70%;" data-detail="durability">
+              <span class="hotspot-dot"></span>
+              <div class="hotspot-info">
+                <strong>Durability</strong>
+                <span>Engineered to outlast civilizations</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="showcase-zoom">
-          <button class="zoom-btn" id="zoomIn" aria-label="Zoom in">
-            <i class="fa-solid fa-plus"></i>
-          </button>
-          <div class="zoom-level">
-            <span id="zoomLevel">1.0</span>x
-          </div>
-          <button class="zoom-btn" id="zoomOut" aria-label="Zoom out">
-            <i class="fa-solid fa-minus"></i>
-          </button>
-        </div>
-
-        <div class="showcase-hotspots">
-          <div class="hotspot" style="top: 20%; left: 30%;" data-label="Premium Clay Finish">
-            <span class="hotspot-dot"></span>
-            <span class="hotspot-tooltip">Premium Clay Finish</span>
-          </div>
-          <div class="hotspot" style="top: 60%; left: 70%;" data-label="Hand-Crafted Edge">
-            <span class="hotspot-dot"></span>
-            <span class="hotspot-tooltip">Hand-Crafted Edge</span>
-          </div>
-          <div class="hotspot" style="top: 40%; left: 50%;" data-label="Aged Patina">
-            <span class="hotspot-dot"></span>
-            <span class="hotspot-tooltip">Aged Patina</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="showcase-info">
-        <div class="showcase-specs">
-          <div class="spec-item">
-            <span class="spec-label">Dimensions</span>
-            <span class="spec-value">215 × 102.5 × 65 mm</span>
-          </div>
-          <div class="spec-divider"></div>
-          <div class="spec-item">
-            <span class="spec-label">Weight</span>
-            <span class="spec-value">2.3 kg</span>
-          </div>
-          <div class="spec-divider"></div>
-          <div class="spec-item">
-            <span class="spec-label">Material</span>
-            <span class="spec-value">Fired Clay</span>
-          </div>
-          <div class="spec-divider"></div>
-          <div class="spec-item">
-            <span class="spec-label">Finish</span>
-            <span class="spec-value">Matte Textured</span>
-          </div>
-          <div class="spec-divider"></div>
-          <div class="spec-item">
-            <span class="spec-label">Origin</span>
-            <span class="spec-value">Earth</span>
+        <div class="showcase-info">
+          <div class="showcase-specs">
+            <div class="spec-item">
+              <span class="spec-label">Dimensions</span>
+              <span class="spec-value">215 × 102.5 × 65 mm</span>
+            </div>
+            <div class="spec-divider"></div>
+            <div class="spec-item">
+              <span class="spec-label">Weight</span>
+              <span class="spec-value">2.3 kg</span>
+            </div>
+            <div class="spec-divider"></div>
+            <div class="spec-item">
+              <span class="spec-label">Material</span>
+              <span class="spec-value">Fired Clay</span>
+            </div>
+            <div class="spec-divider"></div>
+            <div class="spec-item">
+              <span class="spec-label">Finish</span>
+              <span class="spec-value">Matte Textured</span>
+            </div>
+            <div class="spec-divider"></div>
+            <div class="spec-item">
+              <span class="spec-label">Origin</span>
+              <span class="spec-value">Earth</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Panel 2: X-Ray View -->
+    <div class="explore-panel" id="panel-xray" role="tabpanel">
+      <div class="xray-layout">
+        <div class="xray-viewer">
+          <div class="xray-brick-container" id="xrayBrick">
+            <div class="xray-brick-outer"></div>
+            <div class="xray-brick-cutaway" id="xrayCutaway">
+              <div class="xray-layer xray-layer-1"></div>
+              <div class="xray-layer xray-layer-2"></div>
+              <div class="xray-layer xray-layer-3"></div>
+              <div class="xray-layer xray-layer-4"></div>
+            </div>
+            <div class="xray-labels">
+              <div class="xray-label" style="top:20%;left:30%;">
+                <span class="xray-dot"></span>
+                <span class="xray-text">Compressed Earth Core</span>
+              </div>
+              <div class="xray-label" style="top:50%;left:60%;">
+                <span class="xray-dot"></span>
+                <span class="xray-text">Mineral Reinforcement</span>
+              </div>
+              <div class="xray-label" style="top:75%;left:40%;">
+                <span class="xray-dot"></span>
+                <span class="xray-text">Fired Shell</span>
+              </div>
+            </div>
+          </div>
+          <p class="xray-caption">Legendary engineering. Visible only to those who look closer.</p>
+        </div>
+        <div class="xray-controls">
+          <button class="btn btn-outline" id="xrayToggle">
+            <i class="fa-solid fa-eye"></i>
+            <span id="xrayToggleText">Toggle Cutaway</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Build Mode -->
+    <div class="explore-panel" id="panel-build" role="tabpanel">
+      <div class="build-layout">
+        <div class="build-header">
+          <h3 class="build-title">Build with Purpose</h3>
+          <p class="build-desc">Place bricks. Create structures. Watch your vision take shape.</p>
+        </div>
+        <div class="build-platform" id="buildPlatform">
+          <div class="build-grid" id="buildGrid"></div>
+          <div class="build-brick-preview" id="buildPreview">
+            <div class="build-preview-brick"></div>
+          </div>
+          <div class="build-placed-bricks" id="buildPlaced"></div>
+          <div class="build-progress" id="buildProgress">
+            <div class="build-stage-info">
+              <span class="build-stage-icon"><i class="fa-solid fa-cube"></i></span>
+              <span class="build-stage-text" id="buildStageText">Place your first brick</span>
+            </div>
+            <div class="build-stage-bar">
+              <div class="build-stage-fill" id="buildStageFill"></div>
+            </div>
+            <div class="build-stage-labels">
+              <span class="stage-label" data-stage="0">Wall</span>
+              <span class="stage-label" data-stage="1">House</span>
+              <span class="stage-label" data-stage="2">Castle</span>
+              <span class="stage-label" data-stage="3">Skyline</span>
+            </div>
+          </div>
+        </div>
+        <div class="build-controls">
+          <button class="btn btn-primary" id="buildAddBtn">
+            <i class="fa-solid fa-plus"></i> Add Brick
+          </button>
+          <button class="btn btn-outline" id="buildClearBtn">
+            <i class="fa-solid fa-rotate"></i> Clear
+          </button>
+          <span class="build-count"><span id="buildCount">0</span> bricks placed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: Legacy Counter -->
+    <div class="explore-panel" id="panel-legacy" role="tabpanel">
+      <div class="legacy-layout">
+        <div class="legacy-header">
+          <h3 class="legacy-title">The Brick&rsquo;s Legacy</h3>
+          <p class="legacy-desc">Numbers that speak louder than words.</p>
+        </div>
+        <div class="legacy-counters">
+          <div class="legacy-counter-item">
+            <span class="legacy-number" data-target="14000000000">0</span>
+            <span class="legacy-suffix">+</span>
+            <span class="legacy-label">Homes Built</span>
+          </div>
+          <div class="legacy-counter-item">
+            <span class="legacy-number" data-target="800000000000">0</span>
+            <span class="legacy-suffix">+</span>
+            <span class="legacy-label">Walls Standing</span>
+          </div>
+          <div class="legacy-counter-item">
+            <span class="legacy-number" data-target="50000000000">0</span>
+            <span class="legacy-suffix">+</span>
+            <span class="legacy-label">Generations Protected</span>
+          </div>
+          <div class="legacy-counter-item">
+            <span class="legacy-number" data-target="10000">0</span>
+            <span class="legacy-suffix">+</span>
+            <span class="legacy-label">Years of Durability</span>
+          </div>
+        </div>
+        <div class="legacy-footer">
+          <p>The brick built the world. It will build the next one too.</p>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- ============================================ -->
@@ -1051,7 +1213,7 @@
         <div class="footer-col">
           <h4 class="footer-col-title">Navigation</h4>
           <a href="#story" class="footer-link" data-smooth>Story</a>
-          <a href="#showcase" class="footer-link" data-smooth>Showcase</a>
+          <a href="#explore" class="footer-link" data-smooth>Showcase</a>
           <a href="#features" class="footer-link" data-smooth>Features</a>
           <a href="#product" class="footer-link" data-smooth>Purchase</a>
         </div>
